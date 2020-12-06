@@ -3,43 +3,29 @@
     <v-app-bar
       app
       color="primary"
-      dark
     >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <v-row>
+        <v-btn class="mr-2" to="/">Status</v-btn>
+        <v-btn class="mr-2" to="/Control">Kontrola komory</v-btn>
+        <v-btn class="mr-2" to="/Additional">Dodatkowe</v-btn>
+        <v-btn class="mr-2" to="/History">Historia</v-btn>
+        <v-btn class="mr-2" to="/Errors">Stany błędów</v-btn>
+      </v-row>
     </v-app-bar>
-
     <v-main>
-      <HelloWorld/>
+      <router-view/>
     </v-main>
+
+    <v-footer app>
+      <v-row>
+        <v-btn large
+          block 
+          color="error">
+          
+          STOP<br>Awaryjny
+        </v-btn>
+      </v-row>
+    </v-footer>
   </v-app>
 </template>
 
