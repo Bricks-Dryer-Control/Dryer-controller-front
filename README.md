@@ -1,4 +1,5 @@
 # client-app
+Minimum resolution XGA 1024×768
 
 ## Project setup
 ```

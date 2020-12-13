@@ -1,8 +1,15 @@
 <template>
   <v-content>
-    <AppChamberInfo title="Komora 1"
+    <AppChamberInfo :no="1"
                     :temperature="-20"
                     :humidity="44"
+                    :inflow="140"
+                    :outflow="280"
+                    :throughflow="480"
+                    :inflowSet="140"
+                    :outflowSet="340"
+                    :throughflowSet="380"
+                    :status="{working:'waiting', isAuto: true}"
     />
   </v-content>
 </template>
