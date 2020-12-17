@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
+import VueRouter, { Route, RouteConfig } from 'vue-router'
 import Status from '../views/Status.vue'
 import Control from '../views/Control.vue'
 import Additional from '../views/Additional.vue'
@@ -30,7 +30,15 @@ const routes: Array<RouteConfig> = [
   {
     path: '/Control/:chamberNo',
     name: 'Control',
-    component: Control
+    component: Control,
+    beforeEnter: (to: Route, from: Route, next: Function) => {
+      const toNo = Number(to.params.chamberNo)
+      
+      if (toNo === NaN || toNo < 0 || toNo > 6)
+        next({ name: 'Control', params: { chamberNo: "1" }});
+      else
+        next();
+    }
   },
   {
     path: '/Additional',

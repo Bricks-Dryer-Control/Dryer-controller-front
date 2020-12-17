@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-main class="ma-2 pa-0">
     <AppChamberInfo :no="1"
                     :temperature="-20"
                     :humidity="44"
@@ -10,8 +10,9 @@
                     :outflowSet="340"
                     :throughflowSet="380"
                     :status="{working:'waiting', isAuto: true}"
+                    :clickable="true"
     />
-  </v-content>
+  </v-main>
 </template>
 
 <script lang="ts">

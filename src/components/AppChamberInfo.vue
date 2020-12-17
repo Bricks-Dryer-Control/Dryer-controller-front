@@ -1,5 +1,6 @@
 <template>
-  <v-card width="180px" 
+  <v-card :id="'statuscard' + no"
+          width="180px" 
           min-height="300px" 
           :color="backGroundColor"
           @click="onClick">
@@ -47,9 +48,13 @@
     @Prop() outflowSet!: number;
     @Prop() throughflowSet!: number;
     @Prop() status!: IChamberStatus;
+    @Prop({default: false}) clickable!: boolean;
 
-    onClick() {
-      this.$router.push({ name: 'Control', params: { chamberNo: String(this.no) }})
+    onClick(event: Event) {
+      if (this.clickable)
+        this.$router.push({ name: 'Control', params: { chamberNo: String(this.no) }});
+      else
+        event.stopImmediatePropagation();
     }
 
     get backGroundColor() {
@@ -75,7 +80,6 @@
         animations: {
           enabled: false
         },
-        group: this.groupId,
         parentHeightOffset: 0,
         redrawOnParentResize: false,
         redrawOnWindowResize: false,
@@ -181,7 +185,6 @@
         animations: {
           enabled: false
         },
-        group: this.groupId,
         parentHeightOffset: 0,
         redrawOnParentResize: false,
         redrawOnWindowResize: false,
