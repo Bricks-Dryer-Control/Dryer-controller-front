@@ -19,13 +19,13 @@
 <script lang="ts">
   import Vue from 'vue'
   import { Component, Prop, Watch } from 'vue-property-decorator'
-  import { IChamberMaximas } from '../types/ChamberMaximas'
+  import { IChamberValues } from '../types/ChamberValues'
 
   @Component
   export default class AppMaximasControl extends Vue {
-    @Prop() value!: IChamberMaximas;
+    @Prop() value!: IChamberValues;
 
-    current: IChamberMaximas = this.value;
+    current: IChamberValues = this.value;
 
     @Watch("current.inFlow")
     currentInFlowChange(value: number, oldValue: number) {

@@ -6,8 +6,9 @@
         :length="6"
       ></v-pagination>
     </v-row>
-    <v-row>
-      <AppChamberInfo :no="no"
+    <v-row class="pa-2">
+      <AppChamberInfo class="ml-2 mb-2"
+                      :no="no"
                       :temperature="-20"
                       :humidity="44"
                       :inflow="140"
@@ -19,6 +20,9 @@
                       :status="{working:'waiting', isAuto: true}"
       />
       <AppMaximasControl v-model="maximas"
+                         class="ml-2 mb-2"
+      />
+      <AppChamberControl class="ml-2 mb-2"
       />
     </v-row>
   </v-main>
@@ -28,13 +32,15 @@
 import { Component, Vue } from 'vue-property-decorator';
 import AppChamberInfo from '@/components/AppChamberInfo.vue';
 import AppMaximasControl from '@/components/AppMaximasControl.vue';
+import AppChamberControl from '@/components/AppChamberControl.vue';
 import { Route } from 'vue-router';
-import { IChamberMaximas } from '@/types/ChamberMaximas';
+import { IChamberValues } from '@/types/ChamberValues';
 
 @Component({
   components: {
     AppChamberInfo,
     AppMaximasControl,
+    AppChamberControl
   },
 })
 export default class Control extends Vue {
@@ -46,7 +52,7 @@ export default class Control extends Vue {
     this.$router.push({ name: 'Control', params: { chamberNo: String(value) }})
   }
 
-  maximas: IChamberMaximas = {
+  maximas: IChamberValues = {
     inFlow: 480,
     outFlow: 480,
     troughFlow: 150
