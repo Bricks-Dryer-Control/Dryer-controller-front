@@ -1,12 +1,28 @@
 <template>
-  <v-card class="pa-2" width="380px">
+  <v-card class="px-2" width="380px">
     <label>Kontrola</label>
     <v-switch label="Włączona"
     />
-    <v-text-field v-model="newValues.inFlow"
-                  type="number"
-                  label="Nawiew"
-    />
+    <v-row>
+      <v-col 
+        class="py-0"
+        cols="7">
+        <v-text-field
+                      v-model="newValues.inFlow"
+                      type="number"
+                      label="Nawiew"
+        />
+      </v-col>
+      <v-col 
+        class="py-0"
+        cols="4">
+        <v-text-field
+                      v-model="maxValues.inFlow"
+                      type="number"
+                      label="Max auto"
+        />
+      </v-col>
+    </v-row>
     <v-slider v-model="newValues.inFlow"
               min="0"
               max="480"
@@ -14,10 +30,26 @@
               :thumb-color="inColor[1]"
               :track-color="inColor[2]"
     />
-    <v-text-field v-model="newValues.outFlow"
-                  type="number"
-                  label="Odciąg"
-    />
+    <v-row>
+      <v-col 
+        class="py-0"
+        cols="7">
+        <v-text-field
+                      v-model="newValues.outFlow"
+                      type="number"
+                      label="Odciąg"
+        />
+      </v-col>
+      <v-col 
+        class="py-0"
+        cols="4">
+        <v-text-field
+                      v-model="maxValues.outFlow"
+                      type="number"
+                      label="Max auto"
+        />
+      </v-col>
+    </v-row>
     <v-slider v-model="newValues.outFlow"
               min="0"
               max="480"
@@ -25,10 +57,26 @@
               :thumb-color="outColor[1]"
               :track-color="outColor[2]"
     />
-    <v-text-field v-model="newValues.troughFlow"
-                  type="number"
-                  label="Przerzut"
-    />
+    <v-row>
+      <v-col 
+        class="py-0"
+        cols="7">
+        <v-text-field
+                      v-model="newValues.troughFlow"
+                      type="number"
+                      label="Przerzut"
+        />
+      </v-col>
+      <v-col 
+        class="py-0"
+        cols="4">
+        <v-text-field
+                      v-model="maxValues.troughFlow"
+                      type="number"
+                      label="Max auto"
+        />
+      </v-col>
+    </v-row>
     <v-slider v-model="newValues.troughFlow"
               min="0"
               max="480"
@@ -63,6 +111,12 @@
       inFlow: 0,
       outFlow: 0,
       troughFlow: 0
+    }
+    
+    maxValues: IChamberValues = {
+      inFlow: 480,
+      outFlow: 480,
+      troughFlow: 150
     }
 
     private inColor = ['red lighten-2', 'red', 'red lighten-4'];
