@@ -24,6 +24,7 @@
       />
       <AppChamberControl class="ml-2 mb-2"
       />
+      <AppChamberAutoControl class="ml-2 mb-2" />
     </v-row>
   </v-main>
 </template>
@@ -33,6 +34,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import AppChamberInfo from '@/components/AppChamberInfo.vue';
 import AppMaximasControl from '@/components/AppMaximasControl.vue';
 import AppChamberControl from '@/components/AppChamberControl.vue';
+import AppChamberAutoControl from '@/components/AppChamberAutoControl.vue';
 import { Route } from 'vue-router';
 import { IChamberValues } from '@/types/ChamberValues';
 
@@ -40,7 +42,8 @@ import { IChamberValues } from '@/types/ChamberValues';
   components: {
     AppChamberInfo,
     AppMaximasControl,
-    AppChamberControl
+    AppChamberControl,
+    AppChamberAutoControl
   },
 })
 export default class Control extends Vue {
