@@ -18,12 +18,37 @@
 
     <v-footer app>
       <v-row>
-        <v-btn large
-          block 
-          color="error">
-          
-          STOP<br>Awaryjny
-        </v-btn>
+        <v-col cols="2">
+          <v-text-field value="25"
+                        label="Włączonych komór"
+                        type="number"
+                        readonly /> 
+        </v-col>
+        <v-col cols="2">
+          <v-text-field value="0"
+                        label="Działających komór"
+                        type="number"
+                        readonly /> 
+        </v-col>
+        <v-col cols="2">
+          <v-text-field value="0"
+                        label="Komór w kolejce"
+                        type="number"
+                        readonly /> 
+        </v-col>
+        <v-col cols="2">
+          <v-switch value="true"
+                    label="Czujnik kierunku"
+                    readonly />
+        </v-col>
+        <v-col cols="4">
+          <v-btn large
+            block 
+            color="error">
+            
+            STOP<br>Awaryjny
+          </v-btn>
+        </v-col>
       </v-row>
     </v-footer>
   </v-app>
