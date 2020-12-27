@@ -16,32 +16,32 @@
       <router-view/>
     </v-main>
 
-    <v-footer app>
-      <v-row>
-        <v-col cols="2">
+    <v-footer class="py-0" app>
+      <v-row align="center">
+        <v-col class="py-0" cols="2">
           <v-text-field value="25"
                         label="Włączonych komór"
                         type="number"
                         readonly /> 
         </v-col>
-        <v-col cols="2">
+        <v-col class="py-0" cols="2">
           <v-text-field value="0"
                         label="Działających komór"
                         type="number"
                         readonly /> 
         </v-col>
-        <v-col cols="2">
+        <v-col class="py-0" cols="2">
           <v-text-field value="0"
                         label="Komór w kolejce"
                         type="number"
                         readonly /> 
         </v-col>
-        <v-col cols="2">
+        <v-col class="py-0" cols="2">
           <v-switch value="true"
                     label="Czujnik kierunku"
                     readonly />
         </v-col>
-        <v-col cols="4">
+        <v-col class="py-0" cols="4">
           <v-btn large
             block 
             color="error">
