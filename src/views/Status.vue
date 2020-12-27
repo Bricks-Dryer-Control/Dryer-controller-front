@@ -1,7 +1,7 @@
 <template>
   <v-main class="ma-0 pa-0">
     <v-row class="ma-2">
-      <div  v-for="chamber in chambers"
+      <div  v-for="chamber in mychambers"
             :key="chamber.no"
             class="pa-1 ma-0">
         <AppChamberInfo :chamberInfo="chamber"
@@ -28,8 +28,8 @@ export default class Status extends Vue {
     {no: 2, temperature: 70, humidity: 90, actualActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, setActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, status: {working: 'off', isAuto: true}},
     {no: 3, temperature: 30, humidity: 50, actualActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, setActuators: {inFlow: 210, outFlow: 310, throughFlow: 110}, status: {working: 'waiting', isAuto: false}},
     {no: 4, temperature: 80, humidity: 100, actualActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, setActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, status: {working: 'waiting', isAuto: true}},
-    {no: 5, temperature: 40, humidity: 60, actualActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, setActuators: {inFlow: 280, outFlow: 380, throughFlow: 180}, status: {working: 'queued', isAuto: false}},
-    {no: 6, temperature: 90, humidity: 0, actualActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, setActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, status: {working: 'queued', isAuto: true}},
+    {no: 5, temperature: 40, humidity: 60, actualActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, setActuators: {inFlow: 280, outFlow: 380, throughFlow: 180}, status: {working: 'queued', isAuto: false, queuePosition: 1}},
+    {no: 6, temperature: 90, humidity: 0, actualActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, setActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, status: {working: 'queued', isAuto: true, queuePosition: 2}},
     {no: 7, temperature: 50, humidity: 70, actualActuators: {inFlow: 480, outFlow: 480, throughFlow: 480}, setActuators: {inFlow: 480, outFlow: 480, throughFlow: 480}, status: {working: 'working', isAuto: false}},
     {no: 8, temperature: 100, humidity: 10, actualActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, setActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, status: {working: 'working', isAuto: true}},
     {no: 9, temperature: 60, humidity: 80, actualActuators: {inFlow: 0, outFlow: 0, throughFlow: 0}, setActuators: {inFlow: 0, outFlow: 0, throughFlow: 0}, status: {working: 'addon', isAuto: false}},
@@ -49,5 +49,9 @@ export default class Status extends Vue {
     {no: 23, temperature: 20, humidity: 40, actualActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, setActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, status: {working: 'waiting', isAuto: false}},
     {no: 24, temperature: 20, humidity: 40, actualActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, setActuators: {inFlow: 220, outFlow: 340, throughFlow: 140}, status: {working: 'waiting', isAuto: false}},
   ];
+
+  get mychambers() {
+    return Status.chambers;
+  }
 }
 </script>

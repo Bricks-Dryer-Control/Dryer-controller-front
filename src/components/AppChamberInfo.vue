@@ -8,9 +8,10 @@
       <v-col cols="12">
         Komora {{chamberInfo.no}}<br>
         <v-icon :color="workingStatus !== 'off' ? '#9C27B0' : '#424242'">{{ isAuto? 'mdi-alpha-a-circle' : 'mdi-circle' }}</v-icon>
-        <v-icon :color="workingStatus === 'queued' ? '#9C27B0' : '#424242'">mdi-alarm</v-icon>
         <v-icon :color="workingStatus === 'working' ? '#9C27B0' : '#424242'">mdi-arrow-split-horizontal</v-icon>
         <v-icon :color="workingStatus === 'addon' ? '#9C27B0' : '#424242'">mdi-svg</v-icon>
+        <v-icon :color="workingStatus === 'queued' ? '#9C27B0' : '#424242'">mdi-alarm</v-icon>
+        <span v-if="workingStatus === 'queued'">{{queuePosition}}</span>
       </v-col>
     </v-row>
     <v-row>
@@ -55,6 +56,12 @@
 
     get isAuto() {
       return this.chamberInfo.status.isAuto;
+    }
+
+    get queuePosition() {
+      const pos = this.chamberInfo.status.queuePosition;
+
+      return pos ? pos : 0;
     }
 
     get backGroundColor() {
@@ -105,7 +112,7 @@
         style: {
           colors: ['#C62828', '#1565C0']
         },
-        formatter: (value, { seriesIndex, dataPointIndex, w }) => String(seriesIndex > 0 ? value + '%' : (value - 40) + '°C')
+        formatter: (value, { seriesIndex, dataPointIndex, w }) => String(seriesIndex > 0 ? '  ' + value.toFixed(1) + '%' : (value - 40).toFixed(1) + '°C  '),
       },
       xaxis: {
         categories: ['Temp', 'Wilg'],
