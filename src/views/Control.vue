@@ -3,7 +3,7 @@
     <v-row style="justify-content: center">
         <v-pagination
         v-model="no"
-        :length="6"
+        :length="24"
       ></v-pagination>
     </v-row>
     <v-row class="pa-2" style="justify-content: center">
