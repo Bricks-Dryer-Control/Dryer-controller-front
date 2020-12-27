@@ -6,7 +6,7 @@
         :length="6"
       ></v-pagination>
     </v-row>
-    <v-row class="pa-2">
+    <v-row class="pa-2" style="justify-content: center">
       <AppChamberInfo class="ml-2 mb-2"
                       :no="no"
                       :temperature="-20"
@@ -19,12 +19,9 @@
                       :throughflowSet="380"
                       :status="{working:'waiting', isAuto: true}"
       />
-      <AppMaximasControl v-model="maximas"
-                         class="ml-2 mb-2"
-      />
-      <AppChamberControl class="ml-2 mb-2"
-      />
+      <AppChamberControl class="ml-2 mb-2" />
       <AppChamberAutoControl class="ml-2 mb-2" />
+      <AppChamberControlChart class="ml-2 mb-2" />
     </v-row>
   </v-main>
 </template>
@@ -34,6 +31,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import AppChamberInfo from '@/components/AppChamberInfo.vue';
 import AppChamberControl from '@/components/AppChamberControl.vue';
 import AppChamberAutoControl from '@/components/AppChamberAutoControl.vue';
+import AppChamberControlChart from '@/components/AppChamberControlChart.vue';
 import { Route } from 'vue-router';
 import { IChamberValues } from '@/types/ChamberValues';
 
@@ -41,7 +39,8 @@ import { IChamberValues } from '@/types/ChamberValues';
   components: {
     AppChamberInfo,
     AppChamberControl,
-    AppChamberAutoControl
+    AppChamberAutoControl,
+    AppChamberControlChart
   },
 })
 export default class Control extends Vue {
