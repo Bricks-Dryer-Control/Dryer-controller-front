@@ -8,15 +8,7 @@
     </v-row>
     <v-row class="pa-2" style="justify-content: center">
       <AppChamberInfo class="ml-2 mb-2"
-                      :no="no"
-                      :temperature="-20"
-                      :humidity="44"
-                      :inflow="140"
-                      :outflow="280"
-                      :throughflow="480"
-                      :inflowSet="140"
-                      :outflowSet="340"
-                      :throughflowSet="380"
+                      :chamberInfo="chamberInfo"
                       :status="{working:'waiting', isAuto: true}"
       />
       <AppChamberControl class="ml-2 mb-2" />
@@ -33,7 +25,8 @@ import AppChamberControl from '@/components/AppChamberControl.vue';
 import AppChamberAutoControl from '@/components/AppChamberAutoControl.vue';
 import AppChamberControlChart from '@/components/AppChamberControlChart.vue';
 import { Route } from 'vue-router';
-import { IChamberValues } from '@/types/ChamberValues';
+import { IChamberValues } from '@/types/IChamberValues';
+import Status from './Status.vue';
 
 @Component({
   components: {
@@ -52,10 +45,14 @@ export default class Control extends Vue {
     this.$router.push({ name: 'Control', params: { chamberNo: String(value) }})
   }
 
+  get chamberInfo() {
+    return Status.chambers[this.no - 1];
+  }
+
   maximas: IChamberValues = {
     inFlow: 480,
     outFlow: 480,
-    troughFlow: 150
+    throughFlow: 150
   }
 }
 </script>

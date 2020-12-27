@@ -66,7 +66,7 @@
 <script lang="ts">
   import Vue from 'vue'
   import { Component, Prop, Watch } from 'vue-property-decorator'
-  import { IChamberValues } from '@/types/ChamberValues'
+  import { IChamberValues } from '@/types/IChamberValues'
 
   @Component
   export default class AppChamberAutoControl extends Vue {

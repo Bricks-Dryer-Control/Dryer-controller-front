@@ -1,16 +1,16 @@
 <template>
-  <v-card :id="'statuscard' + no"
+  <v-card :id="'statuscard' + chamberInfo.no"
           width="180px" 
           min-height="300px" 
           :color="backGroundColor"
           @click="onClick">
     <v-row class="text-center">
       <v-col cols="12">
-        Komora {{no}}<br>
-        <v-icon :color="status.working !== 'off' ? '#9C27B0' : '#424242'">{{ status.isAuto? 'mdi-alpha-a-circle' : 'mdi-circle' }}</v-icon>
-        <v-icon :color="status.working === 'queued' ? '#9C27B0' : '#424242'">mdi-alarm</v-icon>
-        <v-icon :color="status.working === 'working' ? '#9C27B0' : '#424242'">mdi-arrow-split-horizontal</v-icon>
-        <v-icon :color="status.working === 'addon' ? '#9C27B0' : '#424242'">mdi-svg</v-icon>
+        Komora {{chamberInfo.no}}<br>
+        <v-icon :color="workingStatus !== 'off' ? '#9C27B0' : '#424242'">{{ isAuto? 'mdi-alpha-a-circle' : 'mdi-circle' }}</v-icon>
+        <v-icon :color="workingStatus === 'queued' ? '#9C27B0' : '#424242'">mdi-alarm</v-icon>
+        <v-icon :color="workingStatus === 'working' ? '#9C27B0' : '#424242'">mdi-arrow-split-horizontal</v-icon>
+        <v-icon :color="workingStatus === 'addon' ? '#9C27B0' : '#424242'">mdi-svg</v-icon>
       </v-col>
     </v-row>
     <v-row>
@@ -34,31 +34,31 @@
   import Vue from 'vue'
   import { Component, Prop } from 'vue-property-decorator'
   import { ApexOptions } from 'apexcharts';
-  import { IChamberStatus } from '../types/ChamberStatus'
+  import { IChamberStatus } from '../types/IChamberStatus'
+  import { IChamberInfo } from '../types/IChamberInfo'
 
   @Component
   export default class AppChamberInfo extends Vue {
-    @Prop() no!: number;
-    @Prop() temperature!: number;
-    @Prop() humidity!: number;
-    @Prop() inflow!: number;
-    @Prop() outflow!: number;
-    @Prop() throughflow!: number;
-    @Prop() inflowSet!: number;
-    @Prop() outflowSet!: number;
-    @Prop() throughflowSet!: number;
-    @Prop() status!: IChamberStatus;
+    @Prop() chamberInfo!: IChamberInfo;
     @Prop({default: false}) clickable!: boolean;
 
     onClick(event: Event) {
       if (this.clickable)
-        this.$router.push({ name: 'Control', params: { chamberNo: String(this.no) }});
+        this.$router.push({ name: 'Control', params: { chamberNo: String(this.chamberInfo.no) }});
       else
         event.stopImmediatePropagation();
     }
 
+    get workingStatus() {
+      return this.chamberInfo.status.working;
+    }
+
+    get isAuto() {
+      return this.chamberInfo.status.isAuto;
+    }
+
     get backGroundColor() {
-      switch (this.status.working) {
+      switch (this.workingStatus) {
         case 'off':
           return '#BDBDBD';
         case 'waiting':
@@ -174,8 +174,8 @@
 
     get tempHumSeries() {
       return [
-        {name: 'Temp', data: [ this.temperature + 40 ]},
-        {name: 'Wilg', data: [ this.humidity ]},
+        {name: 'Temp', data: [ this.chamberInfo.temperature + 40 ]},
+        {name: 'Wilg', data: [ this.chamberInfo.humidity ]},
       ]
     }
 
@@ -258,10 +258,13 @@
     }
 
     get actuatorsSeries() {
+      const actual = this.chamberInfo.actualActuators;
+      const setted = this.chamberInfo.setActuators;
+
       return [
-        {name: "Wrtość aktualna", data: [ this.inflow, this.outflow, this.throughflow ]},
-        {name: "Wrtość aktualna", data: [ this.inflow, this.outflow, this.throughflow ]},
-        {name: "Wrtość ustawiona", data: [ this.inflowSet, this.outflowSet, this.throughflowSet ]},
+        {name: "Wrtość aktualna", data: [ actual.inFlow, actual.outFlow, actual.throughFlow ]},
+        {name: "Wrtość aktualna", data: [ actual.inFlow, actual.outFlow, actual.throughFlow ]},
+        {name: "Wrtość ustawiona", data: [ setted.inFlow, setted.outFlow, setted.throughFlow ]},
       ]
     }
   }

@@ -103,20 +103,20 @@
 <script lang="ts">
   import Vue from 'vue'
   import { Component, Prop, Watch } from 'vue-property-decorator'
-  import { IChamberValues } from '@/types/ChamberValues'
+  import { IChamberValues } from '@/types/IChamberValues'
 
   @Component
   export default class AppChamberControl extends Vue {
     newValues: IChamberValues = {
       inFlow: 0,
       outFlow: 0,
-      troughFlow: 0
+      throughFlow: 0
     }
     
     maxValues: IChamberValues = {
       inFlow: 480,
       outFlow: 480,
-      troughFlow: 150
+      throughFlow: 150
     }
 
     private inColor = ['red lighten-2', 'red', 'red lighten-4'];
