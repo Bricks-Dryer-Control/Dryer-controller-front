@@ -1,5 +1,5 @@
 <template>
-  <v-main class="ma-0 pa-0">
+  <div class="ma-0 pa-0">
     <v-row class="ma-2">
       <div  v-for="chamber in mychambers"
             :key="chamber.no"
@@ -9,7 +9,7 @@
         />
       </div>
     </v-row>
-  </v-main>
+  </div>
 </template>
 
 <script lang="ts">

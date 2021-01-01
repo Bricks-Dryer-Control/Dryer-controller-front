@@ -1,5 +1,5 @@
 <template>
-  <v-main class="ma-0 pa-0">
+  <div class="ma-0 pa-0">
     <v-row class="pa-0" style="justify-content: center">
       <AppAddonRoofControl class="px-2 ma-2"
                           name="Dach 1"
@@ -40,7 +40,7 @@
                             :status="{working: 'waiting', isAuto: false}">
       </AppAddonOtherControl>
     </v-row>
-  </v-main>
+  </div>
 </template>
 
 <script lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <v-main class="ma-2 pa-0">
+  <div class="ma-2 pa-0">
     <v-row style="justify-content: center">
         <v-pagination
         v-model="no"
@@ -15,7 +15,7 @@
       <AppChamberAutoControl class="ml-2 mb-2" />
       <AppChamberControlChart class="ml-2 mb-2" />
     </v-row>
-  </v-main>
+  </div>
 </template>
 
 <script lang="ts">
