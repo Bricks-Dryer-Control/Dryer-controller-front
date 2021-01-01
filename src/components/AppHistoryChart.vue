@@ -2,47 +2,23 @@
   <div>
     <v-row>
       <v-col cols="4">
-        <v-menu
-                ref="menu"
-                v-model="menu"
-                :close-on-content-click="false"
-                :return-value.sync="date"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="date"
-                    label="Picker in menu"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="date"
-                  no-title
-                  scrollable
-                >
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    text
-                    color="primary"
-                    @click="menu = false"
-                  >
-                    Cancel
-                  </v-btn>
-                  <v-btn
-                    text
-                    color="primary"
-                    @click="$refs.menu.save(date)"
-                  >
-                    OK
-                  </v-btn>
-                </v-date-picker>
-              </v-menu>
+        <MenuDatePicker v-model="start"
+                        label="Start">
+        </MenuDatePicker>
+      </v-col>
+      <v-col cols="4">
+        <MenuDatePicker v-model="finish"
+                        label="Koniec">
+        </MenuDatePicker>
+      </v-col>
+      <v-col cols="2">
+        <v-text-field type="number"
+                      v-model="chamberNo"
+                      label="Komora">
+        </v-text-field>
+      </v-col>
+      <v-col cols="2">
+        <v-btn block color="primary"><v-icon>mdi-send</v-icon>Zmień</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -71,9 +47,18 @@
   import Vue from 'vue'
   import { Component, Prop, Watch } from 'vue-property-decorator'
   import { ApexOptions } from 'apexcharts'
+  import MenuDatePicker from '@/components/MenuDatePicker.vue'
 
-  @Component
+  @Component({
+    components: {
+      MenuDatePicker
+    }
+  })
   export default class AppHistoryChart extends Vue {
+    start = Date.parse(this.$route.params.startDay);
+    finish = Date.parse(this.$route.params.endDay);
+    chamberNo = Number(this.$route.params.chamberNo);
+
     tempHumSeries = [{
       name: "Temperatura",
       data: [
