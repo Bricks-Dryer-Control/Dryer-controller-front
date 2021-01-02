@@ -1,9 +1,8 @@
 <template>
-<v-menu
-    ref="menu"
+  <v-menu
     v-model="menu"
     :close-on-content-click="false"
-    :return-value.sync="date"
+    :nudge-right="40"
     transition="scale-transition"
     offset-y
     min-width="290px"
@@ -20,25 +19,8 @@
     </template>
     <v-date-picker
       v-model="date"
-      no-title
-      scrollable
-    >
-      <v-spacer></v-spacer>
-      <v-btn
-        text
-        color="primary"
-        @click="menu = false"
-      >
-        Cancel
-      </v-btn>
-      <v-btn
-        text
-        color="primary"
-        @click="$refs.menu.save(date)"
-      >
-        OK
-      </v-btn>
-    </v-date-picker>
+      @input="menu = false"
+    ></v-date-picker>
   </v-menu>
 </template>
 
@@ -52,25 +34,19 @@
     @Prop() label!: string;
 
     menu = false;
+    date!: string;
 
-    _date: number = this.value;
-    get date() {
-      const dateObj = new Date(this._date);
-      const dd = String(dateObj.getDate()).padStart(2, '0')
-      const mm = String(dateObj.getMonth() + 1).padStart(2, '0')
-      const yyyy = String(dateObj.getFullYear())
-
-      return `${yyyy}-${mm}-${dd}`
-    }
-    set date(value: string) {
-      const numValue = Date.parse(value);
-
-      this._date = numValue;
-      this.$emit('input', numValue);
+    @Watch("date")
+    dateChanged(newValue:string) {
+      this.$emit('input', Date.parse(newValue));
     }
 
     beforeMount() {
-      this._date = this.value;
+      const dateObj = new Date(this.value);
+      const dd = String(dateObj.getDate()).padStart(2, '0')
+      const mm = String(dateObj.getMonth() + 1).padStart(2, '0')
+      const yyyy = String(dateObj.getFullYear())
+      this.date = `${yyyy}-${mm}-${dd}`;
     }
   }
 </script>
