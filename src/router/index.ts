@@ -5,6 +5,7 @@ import Control from '../views/Control.vue'
 import Additional from '../views/Additional.vue'
 import History from '../views/History.vue'
 import Errors from '../views/Errors.vue'
+import ChamberService from '@/services/ChamberService'
 
 Vue.use(VueRouter)
 
@@ -34,7 +35,7 @@ const routes: Array<RouteConfig> = [
     beforeEnter: (to: Route, from: Route, next: Function) => {
       const toNo = Number(to.params.chamberNo)
       
-      if (toNo === NaN || toNo < 0 || toNo > 6)
+      if (toNo === NaN || toNo < 0)
         next({ name: 'Control', params: { chamberNo: "1" }});
       else
         next();

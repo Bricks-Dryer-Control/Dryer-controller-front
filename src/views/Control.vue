@@ -3,7 +3,7 @@
     <v-row style="justify-content: center">
         <v-pagination
         v-model="no"
-        :length="24"
+        :length="chamberCount"
       ></v-pagination>
     </v-row>
     <v-row class="pa-2" style="justify-content: center">
@@ -11,7 +11,10 @@
                       :chamberInfo="chamberInfo"
                       :status="{working:'waiting', isAuto: true}"
       />
-      <AppChamberControl class="ml-2 mb-2" />
+      <AppChamberControl class="ml-2 mb-2"
+                         :currentSetValues="newSetActuators"
+                         :currentIsOn="newIsOn"
+      />
       <AppChamberAutoControl class="ml-2 mb-2" />
       <AppChamberControlChart class="ml-2 mb-2" />
     </v-row>
@@ -24,9 +27,9 @@ import AppChamberInfo from '@/components/AppChamberInfo.vue';
 import AppChamberControl from '@/components/AppChamberControl.vue';
 import AppChamberAutoControl from '@/components/AppChamberAutoControl.vue';
 import AppChamberControlChart from '@/components/AppChamberControlChart.vue';
-import { Route } from 'vue-router';
-import { IChamberValues } from '@/types/IChamberValues';
-import Status from './Status.vue';
+import IChamberValues from '@/types/IChamberValues';
+import ChamberService from '@/services/ChamberService';
+import IChamberInfo from '@/types/IChamberInfo';
 
 @Component({
   components: {
@@ -37,22 +40,48 @@ import Status from './Status.vue';
   },
 })
 export default class Control extends Vue {
+  private readonly chamberService: ChamberService;
+  private readonly chamberServiceTrigger = setInterval(this.checkStatus, 1000);
+  private chamberInfo: IChamberInfo;
+  private newSetActuators: IChamberValues;
+  private newIsOn: boolean;
+
+  constructor() {
+    super();
+    this.chamberService = new ChamberService('http://localhost:5000');
+    this.chamberInfo = this.chamberService.ActualState[this.no - 1];
+    this.newSetActuators = this.chamberInfo.setActuators;
+    this.newIsOn = this.chamberInfo.status.working !== 'off';
+  }
+  
+  checkStatus() {
+    this.chamberService.getChamber(this.no).then(value => {
+      this.chamberInfo = value;
+    });
+  }
+
   get no(): number {
     return Number(this.$route.params.chamberNo);
   }
-
   set no(value) {
     this.$router.push({ name: 'Control', params: { chamberNo: String(value) }})
+    this.chamberInfo = this.chamberService.ActualState[value - 1];
+    this.newSetActuators = this.chamberInfo.setActuators;
+    this.newIsOn = this.chamberInfo.status.working !== 'off';
   }
 
-  get chamberInfo() {
-    return Status.chambers[this.no - 1];
+  get chamberCount(): number {
+    return this.chamberService.ActualState.length;
   }
 
   maximas: IChamberValues = {
     inFlow: 480,
     outFlow: 480,
     throughFlow: 150
+  }
+
+  beforeDestroy() {
+    clearInterval(this.chamberServiceTrigger);
   }
 }
 </script>

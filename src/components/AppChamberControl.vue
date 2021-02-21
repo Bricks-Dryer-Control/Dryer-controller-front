@@ -2,6 +2,7 @@
   <v-card class="px-2" width="380px">
     <label>Kontrola</label>
     <v-switch label="Włączona"
+              v-model="newIsOn"
     />
     <v-row>
       <v-col 
@@ -103,25 +104,36 @@
 <script lang="ts">
   import Vue from 'vue'
   import { Component, Prop, Watch } from 'vue-property-decorator'
-  import { IChamberValues } from '@/types/IChamberValues'
+  import IChamberValues from '@/types/IChamberValues'
 
   @Component
   export default class AppChamberControl extends Vue {
-    newValues: IChamberValues = {
-      inFlow: 0,
-      outFlow: 0,
-      throughFlow: 0
-    }
-    
-    maxValues: IChamberValues = {
-      inFlow: 480,
-      outFlow: 480,
-      throughFlow: 150
-    }
+    @Prop() currentSetValues!: IChamberValues;
+    @Prop() currentIsOn!: boolean;
+
+    newIsOn: boolean = false;
+    newValues: IChamberValues = { inFlow: 0, outFlow: 0, throughFlow: 0 };
+    maxValues: IChamberValues = { inFlow: 480, outFlow: 480, throughFlow: 150 };
 
     private inColor = ['red lighten-2', 'red', 'red lighten-4'];
     private outColor = ['blue lighten-2', 'blue', 'blue lighten-4'];
     private troughColor = ['yellow lighten-2', 'yellow', 'yellow lighten-4'];
+
+    @Watch("currentIsOn")
+    currentIsOnChanged(newValue: boolean) {
+      this.newIsOn = newValue;
+    }
+
+    @Watch("currentSetValues")
+    currentSetValuesChanged(newValue: IChamberValues) {
+      this.newValues = newValue;
+    }
+
+    mounted() {
+      if (this.currentSetValues)
+        this.newIsOn = this.currentIsOn;
+        this.newValues = this.currentSetValues;
+    }
   }
 </script>
 

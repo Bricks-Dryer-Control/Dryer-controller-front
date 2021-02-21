@@ -67,8 +67,8 @@
   import Vue from 'vue'
   import { Component, Prop } from 'vue-property-decorator'
   import { ApexOptions } from 'apexcharts';
-  import { IChamberStatus } from '../types/IChamberStatus'
-  import { IChamberInfo } from '../types/IChamberInfo'
+  import IChamberStatus from '@/types/IChamberStatus'
+  import IChamberInfo from '@/types/IChamberInfo'
 
   @Component
   export default class AppAddonRoofControl extends Vue {
