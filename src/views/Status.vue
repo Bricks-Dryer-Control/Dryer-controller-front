@@ -34,10 +34,14 @@ export default class Status extends Vue {
     this.mychambers = this.chamberService.ActualState;
   }
   
-  checkStatuses() {
-    this.chamberService.getAllChambers().then(value => {
-      this.mychambers = value;
-    });
+  checkStatuses(timer: any) {
+    if (this.chamberService) {
+      this.chamberService.getAllChambers().then(value => {
+        this.mychambers = value;
+      });
+    } else {
+      clearInterval(timer);
+    }
   }
 
   beforeDestroy() {

@@ -63,7 +63,7 @@
         class="py-0"
         cols="7">
         <v-text-field
-                      v-model="newValues.troughFlow"
+                      v-model="newValues.throughFlow"
                       type="number"
                       label="Przerzut"
         />
@@ -72,28 +72,28 @@
         class="py-0"
         cols="4">
         <v-text-field
-                      v-model="maxValues.troughFlow"
+                      v-model="maxValues.throughFlow"
                       type="number"
                       label="Max auto"
         />
       </v-col>
     </v-row>
-    <v-slider v-model="newValues.troughFlow"
+    <v-slider v-model="newValues.throughFlow"
               min="0"
               max="480"
-              :color="troughColor[0]"
-              :thumb-color="troughColor[1]"
-              :track-color="troughColor[2]"
+              :color="throughColor[0]"
+              :thumb-color="throughColor[1]"
+              :track-color="throughColor[2]"
     />
     <v-row 
       align="center"
       justify="space-around"
     >
-      <v-btn>
+      <v-btn @click="Clear">
         <v-icon>mdi-refresh</v-icon>Wyczyść
       </v-btn>
-      <v-btn
-        color="primary"
+      <v-btn color="primary"
+             @click="Send"
       >
         <v-icon>mdi-send</v-icon>Zastosuj
       </v-btn>
@@ -117,7 +117,7 @@
 
     private inColor = ['red lighten-2', 'red', 'red lighten-4'];
     private outColor = ['blue lighten-2', 'blue', 'blue lighten-4'];
-    private troughColor = ['yellow lighten-2', 'yellow', 'yellow lighten-4'];
+    private throughColor = ['yellow lighten-2', 'yellow', 'yellow lighten-4'];
 
     @Watch("currentIsOn")
     currentIsOnChanged(newValue: boolean) {
@@ -129,10 +129,19 @@
       this.newValues = newValue;
     }
 
-    mounted() {
+    Clear() {
       if (this.currentSetValues)
-        this.newIsOn = this.currentIsOn;
         this.newValues = this.currentSetValues;
+      if (this.currentIsOn !== null && this.currentIsOn !== undefined)
+        this.newIsOn = this.currentIsOn;
+    }
+
+    Send() {
+      this.$emit("send", this.newIsOn, this.newValues);
+    }
+
+    mounted() {
+      this.Clear();
     }
   }
 </script>

@@ -34,7 +34,7 @@
                       class="pt-0"
                       type="number">
         </v-text-field>
-        <v-btn color="primary"><v-icon>mdi-send</v-icon>Wyślij</v-btn>
+        <v-btn color="primary" @click="Send()"><v-icon>mdi-send</v-icon>Wyślij</v-btn>
       </v-col>
     </v-row>
   </v-card>
@@ -42,18 +42,28 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import { Component, Prop } from 'vue-property-decorator'
-  import { ApexOptions } from 'apexcharts';
+  import { Component, Prop, Watch } from 'vue-property-decorator'
   import IChamberStatus from '@/types/IChamberStatus'
-  import IChamberInfo from '@/types/IChamberInfo'
+  import IAdditionalStatus from '@/types/IAdditionalStatus';
 
   @Component
   export default class AppAddonOtherControl extends Vue {
-    @Prop() name!: string;
-    @Prop() actual!: number;
-    @Prop() status!: IChamberStatus;
+    @Prop({required: true}) no!: number;
+    @Prop({required: true}) value!: IAdditionalStatus;
 
-    toSet: number = this.actual;
+    get name(): string {
+      return `Went ${this.no}`
+    }
+
+    get actual(): number {
+      return this.value.actualValue;
+    }
+
+    get status(): IChamberStatus {
+      return this.value.status;
+    }
+
+    toSet: number = 0;
 
     get color(): string {
       switch (this.status.working) {
@@ -70,6 +80,24 @@
         default:
           return '#FF0000';
       }
+    }
+
+    get actualSeted() {
+      return this.value.setValue;
+    }
+
+    @Watch("actualSeted") 
+    actualSetedChanged(newValue: number, oldValue: number) {
+      if (newValue !== oldValue)
+        this.toSet = newValue;
+    }
+
+    Send() {
+      this.$emit("send", this.no, this.toSet);
+    }
+
+    mounted() {
+      this.toSet = this.value.setValue;
     }
   }
 </script>

@@ -14,6 +14,7 @@
       <AppChamberControl class="ml-2 mb-2"
                          :currentSetValues="newSetActuators"
                          :currentIsOn="newIsOn"
+                         @send="Send"
       />
       <AppChamberAutoControl class="ml-2 mb-2" />
       <AppChamberControlChart class="ml-2 mb-2" />
@@ -41,7 +42,7 @@ import IChamberInfo from '@/types/IChamberInfo';
 })
 export default class Control extends Vue {
   private readonly chamberService: ChamberService;
-  private readonly chamberServiceTrigger = setInterval(this.checkStatus, 1000);
+  private chamberServiceTrigger = setInterval(this.checkStatus, 1000);
   private chamberInfo: IChamberInfo;
   private newSetActuators: IChamberValues;
   private newIsOn: boolean;
@@ -54,10 +55,14 @@ export default class Control extends Vue {
     this.newIsOn = this.chamberInfo.status.working !== 'off';
   }
   
-  checkStatus() {
-    this.chamberService.getChamber(this.no).then(value => {
-      this.chamberInfo = value;
-    });
+  checkStatus(timer: any) {
+    if (this.chamberService && Number.isInteger(this.no)) {
+      this.chamberService.getChamber(this.no).then(value => {
+        this.chamberInfo = value;
+      });
+    } else {
+      clearInterval(timer);
+    }
   }
 
   get no(): number {
@@ -78,6 +83,13 @@ export default class Control extends Vue {
     inFlow: 480,
     outFlow: 480,
     throughFlow: 150
+  }
+
+  Send(isOn: boolean, values: IChamberValues)
+  {
+    this.chamberService.setChamber(this.no, isOn, values).then(value => {
+      this.chamberInfo = value;
+    });
   }
 
   beforeDestroy() {

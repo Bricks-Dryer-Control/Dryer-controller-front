@@ -46,18 +46,17 @@
     <v-row class="text-center">
       <v-col cols="12">
         <v-btn-toggle
-          v-model="setedRoof"
           rounded
           mandatory
         >
-          <v-btn small color="purple lighten-3" :value="true">Dach</v-btn>
-          <v-btn small color="purple lighten-3" :value="false">Przerzut</v-btn>
+          <v-btn small color="purple lighten-3" v-model="toRoof">Dach</v-btn>
+          <v-btn small color="purple lighten-3" :value="!toRoof">Przerzut</v-btn>
         </v-btn-toggle>
       </v-col>
     </v-row>
     <v-row class="text-center">
       <v-col cols="12">
-          <v-btn color="primary"><v-icon>mdi-send</v-icon>Wyślij</v-btn>
+          <v-btn color="primary" @click="Send()"><v-icon>mdi-send</v-icon>Wyślij</v-btn>
       </v-col>
     </v-row>
   </v-card>
@@ -65,20 +64,36 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import { Component, Prop } from 'vue-property-decorator'
-  import { ApexOptions } from 'apexcharts';
+  import { Component, Prop, Watch } from 'vue-property-decorator'
   import IChamberStatus from '@/types/IChamberStatus'
-  import IChamberInfo from '@/types/IChamberInfo'
+  import IAdditionalRoofInfo from '@/types/IAdditionalRoofInfo';
 
   @Component
   export default class AppAddonRoofControl extends Vue {
-    @Prop() name!: string;
-    @Prop() roofActual!: number;
-    @Prop() roofStatus!: IChamberStatus;
-    @Prop() throughActual!: number;
-    @Prop() throughStatus!: IChamberStatus;
+    @Prop({required: true}) no!: number;
+    @Prop({required: true}) values!: IAdditionalRoofInfo;
 
-    setedRoof: boolean = true;
+    toRoof: boolean = true;
+
+    get roofActual(): number {
+      return this.values.roof.actualValue;
+    }
+
+    get roofStatus(): IChamberStatus {
+      return this.values.roof.status;
+    }
+
+    get throughActual(): number {
+      return this.values.through.actualValue;
+    }
+
+    get throughStatus(): IChamberStatus {
+      return this.values.through.status;
+    }
+
+    get name(): string {
+      return `Dach ${this.no}`
+    }
 
     getColor(status: IChamberStatus): string {
       switch (status.working) {
@@ -95,6 +110,24 @@
         default:
           return '#FF0000';
       }
+    }
+
+    get isRoofSeted() {
+      return this.values.roof.setValue != 0;
+    }
+
+    @Watch("isRoofSeted")
+    isRoofSetedsChanged(newValue: boolean, oldValue: boolean) {
+      if (newValue !== oldValue)
+        this.toRoof = newValue;
+    }
+
+    Send() {
+      this.$emit('send', this.no, this.toRoof)
+    }
+
+    mounted() {
+      this.toRoof = this.values.roof.setValue != 0;
     }
   }
 </script>
