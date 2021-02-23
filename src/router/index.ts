@@ -34,12 +34,18 @@ const routes: Array<RouteConfig> = [
     name: 'Control',
     component: Control,
     beforeEnter: (to: Route, from: Route, next: Function) => {
-      const toNo = Number(to.params.chamberNo)
-      
-      if (toNo === NaN || toNo < 0)
-        next({ name: 'Control', params: { chamberNo: "1" }});
-      else
-        next();
+      if (ChamberService.Count === 0) {
+        next({name: 'Status'});
+      } else {
+        const toNo = Number(to.params.chamberNo)
+        
+        if (toNo === NaN || toNo < 1 || toNo > ChamberService.Count)
+          next({ name: 'Control', params: { chamberNo: "1" }});
+        else
+          next();
+      }
+
+
     }
   },{
     path: '/Additional',

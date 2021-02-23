@@ -14,6 +14,10 @@ export default class ChamberService {
         return ChamberService.actualState;
     }
 
+    public static get Count() {
+        return ChamberService.actualState.length;
+    }
+
     public async getAllChambers(): Promise<IChamberInfo[]>
     {
         var result = await this.restClient.get<IChamberInfo[]>('/Chamber');

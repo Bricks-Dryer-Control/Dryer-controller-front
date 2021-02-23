@@ -76,7 +76,7 @@ export default class Control extends Vue {
   }
 
   get chamberCount(): number {
-    return this.chamberService.ActualState.length;
+    return ChamberService.Count;
   }
 
   maximas: IChamberValues = {
