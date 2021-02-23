@@ -5,7 +5,7 @@
       color="primary"
     >
       <v-row>
-        <v-btn class="mr-2" to="/">Status</v-btn>
+        <v-btn class="mr-2" to="/Status">Status</v-btn>
         <v-btn class="mr-2" to="/Control">Kontrola komory</v-btn>
         <v-btn class="mr-2" to="/Additional">Dodatkowe</v-btn>
         <v-btn class="mr-2" to="/History">Historia</v-btn>

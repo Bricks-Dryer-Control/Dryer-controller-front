@@ -21,14 +21,15 @@ function todayDate() {
 const routes: Array<RouteConfig> = [
   {
     path: '/',
+    redirect: '/Status'
+  },{
+    path: '/Status',
     name: 'Status',
     component: Status
-  },
-  {
+  },{
     path: '/Control',
     redirect: { name: 'Control', params: { chamberNo: '1' }}
-  },
-  {
+  },{
     path: '/Control/:chamberNo',
     name: 'Control',
     component: Control,
@@ -40,13 +41,11 @@ const routes: Array<RouteConfig> = [
       else
         next();
     }
-  },
-  {
+  },{
     path: '/Additional',
     name: 'Additional',
     component: Additional
-  },
-  {
+  },{
     path: '/History',
     redirect: () => {
       const today = todayDate();
@@ -56,29 +55,25 @@ const routes: Array<RouteConfig> = [
         endDay: today,
       } }
     }
-  },
-  {
+  },{
     path: '/History/:chamberNo',
     redirect: route => {
       const today = todayDate();
 
       return `${route.path}/${today}/${today}`;
     }
-  },
-  {
+  },{
     path: '/History/:chamberNo/:startDay',
     redirect: route => {
       const today = todayDate();
 
       return `${route.path}/${today}`;
     }
-  },
-  {
+  },{
     path: '/History/:chamberNo/:startDay/:endDay',
     name: 'History',
     component: History
-  },
-  {
+  },{
     path: '/Errors',
     name: 'Errors',
     component: Errors
