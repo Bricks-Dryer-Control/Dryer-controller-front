@@ -138,7 +138,8 @@
           },
           labels: {
             formatter: (val) => String(val - 40)
-          }
+          },
+          decimalsInFloat: 0
         },
         {
           show: true,
@@ -149,7 +150,8 @@
           tickAmount: 4,
           tooltip: {
             enabled: false
-          }
+          },
+          decimalsInFloat: 0
         }
       ],
       legend: {
