@@ -1,25 +1,10 @@
-# client-app
-Minimum resolution XGA 1024×768
+# Bricks Dryer Control - Dryer Controller Front
+## Description
+Client program used for controling server app.
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Technologies
+- [Typescript](https://www.typescriptlang.org/)
+- [Vue](https://vuejs.org/)
+- [Vuetify](https://vuetifyjs.com/)
+- [ApexCharts](https://apexcharts.com/)
+- [Vue-Router](https://router.vuejs.org/)
