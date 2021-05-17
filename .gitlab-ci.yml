@@ -1,0 +1,20 @@
+image: node:latest
+
+stages:
+  - build
+
+build site:
+  stage: build
+  before_script:
+    - apt-get update
+    - apt-get install zip unzip nodejs npm -y
+    - npm install --progress=false
+  cache:
+    paths:
+    - node_modules/
+  script:
+    - npm run build
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/
