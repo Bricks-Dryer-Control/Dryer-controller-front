@@ -124,6 +124,11 @@
       this.newIsOn = newValue;
     }
 
+    @Watch("newIsOn")
+    newIsOnChanged(newValue: boolean) {
+      this.$emit('sendListening', newValue)
+    }
+
     @Watch("currentSetValues")
     currentSetValuesChanged(newValue: IChamberValues) {
       this.newValues = newValue;
@@ -137,7 +142,7 @@
     }
 
     Send() {
-      this.$emit("send", this.newIsOn, this.newValues);
+      this.$emit("send", this.newValues);
     }
 
     mounted() {

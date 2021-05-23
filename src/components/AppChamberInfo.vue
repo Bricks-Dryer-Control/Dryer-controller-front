@@ -12,6 +12,7 @@
         <v-icon :color="workingStatus === 'addon' ? '#9C27B0' : '#424242'">mdi-svg</v-icon>
         <v-icon :color="workingStatus === 'queued' ? '#9C27B0' : '#424242'">mdi-alarm</v-icon>
         <span v-if="workingStatus === 'queued'">{{queuePosition}}</span>
+        <v-icon v-if="workingStatus === 'error'" color='#FF0000'>mdi-alert</v-icon>
       </v-col>
     </v-row>
     <v-row>
@@ -76,8 +77,9 @@
           return '#E8F5E9';
         case 'addon':
           return '#E1BEE7';
+        case 'error':
         default:
-          return '#FF0000';
+          return '#FF9999';
       }
     }
 

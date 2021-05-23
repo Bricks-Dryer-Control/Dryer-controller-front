@@ -52,9 +52,23 @@ export default class ChamberService {
         }
     }
 
-    public async setChamber(no: number, isOn: boolean, setValues?: IChamberValues): Promise<IChamberInfo>
+    public async setChamber(no: number, setValues?: IChamberValues): Promise<IChamberInfo>
     {
-        const result = await this.restClient.create<IChamberInfo>(`/Chamber/${no}`, {isOn: isOn, newSets: setValues});
+        const result = await this.restClient.create<IChamberInfo>(`/Chamber/${no}/Set`, setValues);
+        return new Promise((resolve, reject) => {
+            if (result.statusCode === 200 && result.result) {
+                if (ChamberService.actualState[no - 1].readingTime < result.result.readingTime)
+                    ChamberService.actualState[no - 1] = result.result;
+                resolve(ChamberService.actualState[no - 1]);
+            }
+            else
+                reject(result.statusCode);
+        });
+    }
+
+    public async setListening(no: number, value: boolean): Promise<IChamberInfo>
+    {
+        const result = await this.restClient.create<IChamberInfo>(`/Chamber/${no}/Turn`, value);
         return new Promise((resolve, reject) => {
             if (result.statusCode === 200 && result.result) {
                 if (ChamberService.actualState[no - 1].readingTime < result.result.readingTime)

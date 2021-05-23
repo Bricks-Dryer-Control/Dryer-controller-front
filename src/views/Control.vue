@@ -15,6 +15,7 @@
                          :currentSetValues="newSetActuators"
                          :currentIsOn="newIsOn"
                          @send="Send"
+                         @sendListening="SendListening"
       />
       <AppChamberAutoControl class="ml-2 mb-2" />
       <AppChamberControlChart class="ml-2 mb-2" />
@@ -23,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Watch, Vue } from 'vue-property-decorator';
 import AppChamberInfo from '@/components/AppChamberInfo.vue';
 import AppChamberControl from '@/components/AppChamberControl.vue';
 import AppChamberAutoControl from '@/components/AppChamberAutoControl.vue';
@@ -52,7 +53,7 @@ export default class Control extends Vue {
     this.chamberService = new ChamberService('http://localhost:5000');
     this.chamberInfo = this.chamberService.ActualState[this.no - 1];
     this.newSetActuators = this.chamberInfo.setActuators;
-    this.newIsOn = this.chamberInfo.status.working !== 'off';
+    this.newIsOn = this.chamberInfo.status.isActive;
   }
   
   checkStatus(timer: any) {
@@ -72,7 +73,7 @@ export default class Control extends Vue {
     this.$router.push({ name: 'Control', params: { chamberNo: String(value) }})
     this.chamberInfo = this.chamberService.ActualState[value - 1];
     this.newSetActuators = this.chamberInfo.setActuators;
-    this.newIsOn = this.chamberInfo.status.working !== 'off';
+    this.newIsOn = this.chamberInfo.status.isActive;
   }
 
   get chamberCount(): number {
@@ -85,11 +86,15 @@ export default class Control extends Vue {
     throughFlow: 150
   }
 
-  Send(isOn: boolean, values: IChamberValues)
+  Send(values: IChamberValues)
   {
-    this.chamberService.setChamber(this.no, isOn, values).then(value => {
+    this.chamberService.setChamber(this.no, values).then(value => {
       this.chamberInfo = value;
     });
+  }
+
+  SendListening(value: boolean) {
+      this.chamberService.setListening(this.no, value);
   }
 
   beforeDestroy() {
