@@ -9,7 +9,6 @@
     <v-row class="pa-2" style="justify-content: center">
       <AppChamberInfo class="ml-2 mb-2"
                       :chamberInfo="chamberInfo"
-                      :status="{working:'waiting', isAuto: true}"
       />
       <AppChamberControl class="ml-2 mb-2"
                          :currentSetValues="newSetActuators"

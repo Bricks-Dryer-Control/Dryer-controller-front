@@ -41,7 +41,11 @@ export default class ChamberService {
             return new Promise((resolve, reject) => {
                 if (result.statusCode === 200 && result.result) {
                     if (ChamberService.actualState[no - 1].readingTime < result.result.readingTime)
+                    {
+                        if (result.result.status.working === "waiting" && !result.result.status.isActive)
+                            result.result.status.working = "off";
                         ChamberService.actualState[no - 1] = result.result;
+                    }
                     resolve(ChamberService.actualState[no - 1]);
                 }
                 else
