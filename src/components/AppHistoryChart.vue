@@ -18,7 +18,10 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn block color="primary"><v-icon>mdi-send</v-icon>Zmień</v-btn>
+        <v-btn block color="primary"
+               @click="change">
+                  <v-icon>mdi-send</v-icon>Zmień
+        </v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -48,6 +51,8 @@
   import { Component, Prop, Watch } from 'vue-property-decorator'
   import { ApexOptions } from 'apexcharts'
   import MenuDatePicker from '@/components/MenuDatePicker.vue'
+  import HistoryService from '@/services/HistoryService'
+import IHistoryResult from '@/types/IHistoryResult'
 
   @Component({
     components: {
@@ -55,9 +60,83 @@
     }
   })
   export default class AppHistoryChart extends Vue {
+    private readonly historyService: HistoryService;
+    constructor () {
+      super();
+      this.historyService = new HistoryService('http://localhost:5000');
+    }
+
     start = Date.parse(this.$route.params.startDay);
     finish = Date.parse(this.$route.params.endDay);
     chamberNo = Number(this.$route.params.chamberNo);
+
+
+    change() {
+      this.$router.push({ name: 'History', params: { chamberNo: String(this.chamberNo), startDay: String(this.start), endDay: String(this.finish) }});
+      this.historyService.getHistory({
+        no: this.chamberNo,
+        from: new Date(this.start),
+        to: new Date(this.finish),
+      }).then(this.parseData);
+    }
+
+    parseData(data: IHistoryResult) {
+      const temps = data.sensors.map(v => [v.timeUtc, v.value.temperature]);
+      const hums = data.sensors.map(v => [v.timeUtc, v.value.humidity]);
+      const inFlows = data.status.map(v => [v.timeUtc, v.value.inFlowPosition]);
+      const outFlows = data.status.map(v => [v.timeUtc, v.value.outFlowPosition]);
+      const throughFlows = data.status.map(v => [v.timeUtc, v.value.throughFlowPosition]);
+      const inFlowSets = data.status.map(v => [v.timeUtc, v.value.inFlowSet]);
+      const outFlowSets = data.status.map(v => [v.timeUtc, v.value.outFlowSet]);
+      const throughFlowSets = data.status.map(v => [v.timeUtc, v.value.throughFlowSet]);
+
+      this.tempHumSeries = [{
+        name: "Temperatura",
+          data: temps
+        },{
+          name: "Wilgotność",
+          data: hums
+        }/*,{
+          name: "Nastawa",
+          data: [
+            [ new Date('2020-01-01 00:00:00'), 25 ],
+            [ new Date('2020-01-01 01:00:00'), 35 ],
+            [ new Date('2020-01-01 01:30:00'), 35 ]
+          ]
+      }*/];
+
+      this.actuatorSeries = [{
+        name: "Nawiew",
+        data: inFlows
+      },{
+        name: "Odciąg",
+        data: outFlows
+      },{
+        name: "Przerzut",
+        data: throughFlows
+      },{
+        name: "Nast. nawiew",
+        data: inFlowSets
+      },{
+        name: "Nast. odciąg",
+        data: outFlowSets
+      },{
+        name: "Nast. przerzut",
+        data: throughFlowSets
+      }]
+
+      this.statusSeries = [/*{
+        name: "Włączony",
+        data: [
+          {x: "Status", y: [new Date('2020-01-01 00:00:00').getTime(),  new Date('2020-01-01 01:00:00').getTime()]},
+        ],
+      },{
+        name: "Automat",
+        data: [
+          {x: "Status", y: [new Date('2020-01-01 00:20:00').getTime(),  new Date('2020-01-01 01:20:00').getTime()]},
+        ],
+      }*/]
+    }
 
     tempHumSeries = [{
       name: "Temperatura",
