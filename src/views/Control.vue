@@ -17,7 +17,9 @@
                          @sendListening="SendListening"
       />
       <AppChamberAutoControl class="ml-2 mb-2" />
-      <AppChamberControlChart class="ml-2 mb-2" />
+      <AppChamberControlChart 
+        :chamberNo="no"
+        class="ml-2 mb-2" />
     </v-row>
   </div>
 </template>

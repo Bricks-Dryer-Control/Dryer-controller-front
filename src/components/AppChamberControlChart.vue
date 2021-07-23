@@ -19,89 +19,129 @@
 </template>
 
 <script lang="ts">
+  import HistoryService from '@/services/HistoryService';
+  import IHistoryResult from '@/types/IHistoryResult';
   import { ApexOptions } from 'apexcharts'
   import Vue from 'vue'
   import { Component, Prop, Watch } from 'vue-property-decorator'
 
   @Component
   export default class AppChamberControlChart extends Vue {
+    @Prop() chamberNo!: number;
+
+    private readonly historyService: HistoryService;
+    private historyServiceTrigger = setInterval(this.checkHistory, 5000);
+    constructor () {
+      super();
+      this.historyService = new HistoryService('http://localhost:5000');
+      this.checkHistory(null);
+    }
+    
+    checkHistory(timer: any) {
+      if (this.historyService && Number.isInteger(this.chamberNo)) {
+        const now = new Date();
+        let hourAgo = new Date(now);
+        hourAgo.setHours(now.getHours() - 1);
+        this.historyService.getHistory({ no: this.chamberNo, from: now.toISOString(), to: hourAgo.toISOString() })
+          .then(this.parseData);
+      } else {
+        clearInterval(timer);
+      }
+    }
+
+    beforeDestroy() {
+      clearInterval(this.historyServiceTrigger);
+    }
+
+    @Watch("chamberNo")
+    chamberChanged(newNo: number) {
+      clearInterval(this.historyServiceTrigger);
+      this.checkHistory(null);
+      this.historyServiceTrigger = setInterval(this.checkHistory, 5000);
+    }
+
+    parseData(data: IHistoryResult) {
+      if (data.no !== this.chamberNo) {
+        return;
+      }
+
+      const temps = data.sensors.map(v => [v.timeUtc, v.value.temperature]);
+      const hums = data.sensors.map(v => [v.timeUtc, v.value.humidity]);
+      const inFlows = data.status.map(v => [v.timeUtc, v.value.inFlowPosition]);
+      const outFlows = data.status.map(v => [v.timeUtc, v.value.outFlowPosition]);
+      const throughFlows = data.status.map(v => [v.timeUtc, v.value.throughFlowPosition]);
+      const inFlowSets = data.status.map(v => [v.timeUtc, v.value.inFlowSet]);
+      const outFlowSets = data.status.map(v => [v.timeUtc, v.value.outFlowSet]);
+      const throughFlowSets = data.status.map(v => [v.timeUtc, v.value.throughFlowSet]);
+
+      this.tempHumSeries = [{
+        name: "Temperatura",
+          data: temps
+        },{
+          name: "Wilgotność",
+          data: hums
+        }];
+
+      this.actuatorSeries = [{
+        name: "Nawiew",
+        data: inFlows
+      },{
+        name: "Odciąg",
+        data: outFlows
+      },{
+        name: "Przerzut",
+        data: throughFlows
+      },{
+        name: "Nast. nawiew",
+        data: inFlowSets
+      },{
+        name: "Nast. odciąg",
+        data: outFlowSets
+      },{
+        name: "Nast. przerzut",
+        data: throughFlowSets
+      }]
+
+      this.statusSeries = []
+    }
+    
     tempHumSeries = [{
       name: "Temperatura",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 20 ],
-        [ new Date('2020-01-01 01:00:00'), 40 ],
-        [ new Date('2020-01-01 01:30:00'), 30 ]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Wilgotność",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 40 ],
-        [ new Date('2020-01-01 01:00:00'), 80 ],
-        [ new Date('2020-01-01 01:30:00'), 90 ]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Nastawa",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 25 ],
-        [ new Date('2020-01-01 01:00:00'), 35 ],
-        [ new Date('2020-01-01 01:30:00'), 35 ]
-      ]
+      data: [] as (number | Date)[][]
     }]
 
     actuatorSeries = [{
       name: "Nawiew",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 250],
-        [ new Date('2020-01-01 01:00:00'), 350],
-        [ new Date('2020-01-01 01:30:00'), 350]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Odciąg",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 250],
-        [ new Date('2020-01-01 01:00:00'), 35],
-        [ new Date('2020-01-01 01:30:00'), 480]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Przerzut",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 0],
-        [ new Date('2020-01-01 01:00:00'), 0],
-        [ new Date('2020-01-01 01:30:00'), 125]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Nast. nawiew",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 260],
-        [ new Date('2020-01-01 01:00:00'), 340],
-        [ new Date('2020-01-01 01:30:00'), 350]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Nast. odciąg",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 240],
-        [ new Date('2020-01-01 01:00:00'), 30],
-        [ new Date('2020-01-01 01:30:00'), 420]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Nast. przerzut",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 0],
-        [ new Date('2020-01-01 01:00:00'), 0],
-        [ new Date('2020-01-01 01:30:00'), 115]
-      ]
+      data: [] as (number | Date)[][]
     }]
 
     statusSeries = [{
       name: "Włączony",
-      data: [
-        {x: "Status", y: [new Date('2020-01-01 00:00:00').getTime(),  new Date('2020-01-01 01:00:00').getTime()]},
-      ],
+      data: [] as { x: string; y: number[]; }[],
     },{
       name: "Automat",
-      data: [
-        {x: "Status", y: [new Date('2020-01-01 00:20:00').getTime(),  new Date('2020-01-01 01:20:00').getTime()]},
-      ],
+      data: [] as { x: string; y: number[]; }[],
     }]
 
     tempHumOptions: ApexOptions = {
@@ -127,7 +167,7 @@
         size: 0
       },
       title: {
-        text: "Historia komory"
+        text: "Historia komory " + String(this.chamberNo)
       },
       xaxis: {
         type: 'datetime'

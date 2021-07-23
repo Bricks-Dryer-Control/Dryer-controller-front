@@ -48,7 +48,7 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import { Component, Prop, Watch } from 'vue-property-decorator'
+  import { Component} from 'vue-property-decorator'
   import { ApexOptions } from 'apexcharts'
   import MenuDatePicker from '@/components/MenuDatePicker.vue'
   import HistoryService from '@/services/HistoryService'
