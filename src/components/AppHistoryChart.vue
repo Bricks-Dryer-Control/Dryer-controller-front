@@ -52,7 +52,7 @@
   import { ApexOptions } from 'apexcharts'
   import MenuDatePicker from '@/components/MenuDatePicker.vue'
   import HistoryService from '@/services/HistoryService'
-import IHistoryResult from '@/types/IHistoryResult'
+  import IHistoryResult from '@/types/IHistoryResult'
 
   @Component({
     components: {
@@ -64,20 +64,40 @@ import IHistoryResult from '@/types/IHistoryResult'
     constructor () {
       super();
       this.historyService = new HistoryService('http://localhost:5000');
-    }
-
-    start = Date.parse(this.$route.params.startDay);
-    finish = Date.parse(this.$route.params.endDay);
-    chamberNo = Number(this.$route.params.chamberNo);
-
-
-    change() {
-      this.$router.push({ name: 'History', params: { chamberNo: String(this.chamberNo), startDay: String(this.start), endDay: String(this.finish) }});
+      this.start = Date.parse(this.$route.params.startDay);
+      this.finish = Date.parse(this.$route.params.endDay);
+      this.chamberNo = Number(this.$route.params.chamberNo);
+      
       this.historyService.getHistory({
         no: this.chamberNo,
-        from: new Date(this.start),
-        to: new Date(this.finish),
+        from: this.$route.params.startDay,
+        to: this.$route.params.endDay,
       }).then(this.parseData);
+    }
+
+    start: number;
+    finish: number;
+    chamberNo: number;
+
+    change() {
+      const start = new Date(this.start);
+      const finish = new Date(this.finish);
+
+      this.$router.push({ name: 'History', params: { chamberNo: String(this.chamberNo), startDay: this.formatDate(start), endDay: this.formatDate(finish) }});
+      this.historyService.getHistory({
+        no: this.chamberNo,
+        from: this.getUtc(start),
+        to: this.getUtc(new Date(this.finish + 24 * 60 * 60 * 1000)),
+      }).then(this.parseData);
+    }
+
+    getUtc(date: Date): string {
+      const splited = date.toISOString().split(/\D/);
+      return new Date(Number(splited[0]), Number(splited[1]), Number(splited[2])).toISOString();
+    }
+
+    formatDate(date: Date): string {
+      return date.toISOString().slice(0,10);
     }
 
     parseData(data: IHistoryResult) {
@@ -140,81 +160,41 @@ import IHistoryResult from '@/types/IHistoryResult'
 
     tempHumSeries = [{
       name: "Temperatura",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 20 ],
-        [ new Date('2020-01-01 01:00:00'), 40 ],
-        [ new Date('2020-01-01 01:30:00'), 30 ]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Wilgotność",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 40 ],
-        [ new Date('2020-01-01 01:00:00'), 80 ],
-        [ new Date('2020-01-01 01:30:00'), 90 ]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Nastawa",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 25 ],
-        [ new Date('2020-01-01 01:00:00'), 35 ],
-        [ new Date('2020-01-01 01:30:00'), 35 ]
-      ]
+      data: [] as (number | Date)[][]
     }]
 
     actuatorSeries = [{
       name: "Nawiew",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 250],
-        [ new Date('2020-01-01 01:00:00'), 350],
-        [ new Date('2020-01-01 01:30:00'), 350]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Odciąg",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 250],
-        [ new Date('2020-01-01 01:00:00'), 35],
-        [ new Date('2020-01-01 01:30:00'), 480]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Przerzut",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 0],
-        [ new Date('2020-01-01 01:00:00'), 0],
-        [ new Date('2020-01-01 01:30:00'), 125]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Nast. nawiew",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 260],
-        [ new Date('2020-01-01 01:00:00'), 340],
-        [ new Date('2020-01-01 01:30:00'), 350]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Nast. odciąg",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 240],
-        [ new Date('2020-01-01 01:00:00'), 30],
-        [ new Date('2020-01-01 01:30:00'), 420]
-      ]
+      data: [] as (number | Date)[][]
     },{
       name: "Nast. przerzut",
-      data: [
-        [ new Date('2020-01-01 00:00:00'), 0],
-        [ new Date('2020-01-01 01:00:00'), 0],
-        [ new Date('2020-01-01 01:30:00'), 115]
-      ]
+      data: [] as (number | Date)[][]
     }]
 
     statusSeries = [{
       name: "Włączony",
-      data: [
-        {x: "Status", y: [new Date('2020-01-01 00:00:00').getTime(),  new Date('2020-01-01 01:00:00').getTime()]},
-      ],
+      data: [] as { x: string; y: number[]; }[],
     },{
       name: "Automat",
-      data: [
-        {x: "Status", y: [new Date('2020-01-01 00:20:00').getTime(),  new Date('2020-01-01 01:20:00').getTime()]},
-      ],
+      data: [] as { x: string; y: number[]; }[],
     }]
 
     tempHumOptions: ApexOptions = {

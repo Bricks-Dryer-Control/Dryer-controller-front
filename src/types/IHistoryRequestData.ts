@@ -1,5 +1,5 @@
 export default interface IHistoryRequestData {
     no: number,
-    from: Date,
-    to: Date,
+    from: string,
+    to: string,
 }

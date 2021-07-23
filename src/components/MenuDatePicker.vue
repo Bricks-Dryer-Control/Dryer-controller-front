@@ -9,24 +9,25 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
-        v-model="date"
+        :value="date"
         :label="label"
         prepend-icon="mdi-calendar"
         readonly
         v-bind="attrs"
         v-on="on"
+        @input="dateChanged"
       ></v-text-field>
     </template>
     <v-date-picker
-      v-model="date"
-      @input="menu = false"
+      :value="date"
+      @input="menuChanged"
     ></v-date-picker>
   </v-menu>
 </template>
 
 <script lang="ts">
   import Vue from 'vue'
-  import { Component, Prop, Watch } from 'vue-property-decorator'
+  import { Component, Prop } from 'vue-property-decorator'
 
   @Component
   export default class MenuDatePicker extends Vue {
@@ -36,9 +37,14 @@
     menu = false;
     date!: string;
 
-    @Watch("date")
-    dateChanged(newValue:string) {
+    dateChanged(newValue: string) {
       this.$emit('input', Date.parse(newValue));
+    }
+
+    menuChanged(newDate: string) {
+      this.menu = false;
+      this.date = newDate;
+      this.dateChanged(newDate);
     }
 
     beforeMount() {

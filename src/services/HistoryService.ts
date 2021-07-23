@@ -11,7 +11,7 @@ export default class HistoryService {
 
     public async getHistory(data: IHistoryRequestData): Promise<IHistoryResult>
     {
-        const result = await this.restClient.get<IHistoryResult>(`/History?no=${data.no}&from=${data.from.getUTCDate()}&to=${data.to.getUTCDate()}`);
+        const result = await this.restClient.get<IHistoryResult>(`/History?no=${data.no}&from=${data.from}&to=${data.to}`);
         return new Promise((resolve, reject) => {
             if (result.statusCode === 200 && result.result) {
                 resolve(result.result);
