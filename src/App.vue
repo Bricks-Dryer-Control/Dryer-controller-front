@@ -9,7 +9,7 @@
         <v-btn class="mr-2" to="/Control">Kontrola komory</v-btn>
         <v-btn class="mr-2" to="/Additional">Dodatkowe</v-btn>
         <v-btn class="mr-2" to="/History">Historia</v-btn>
-        <v-btn class="mr-2" to="/Errors">Stany błędów</v-btn>
+        <!-- <v-btn class="mr-2" to="/Errors">Stany błędów</v-btn> -->
       </v-row>
     </v-app-bar>
     <v-main>

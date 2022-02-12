@@ -114,7 +114,7 @@
         style: {
           colors: ['#C62828', '#1565C0']
         },
-        formatter: (value, { seriesIndex, dataPointIndex, w }) => String(seriesIndex > 0 ? '  ' + value.toFixed(1) + '%' : (value - 40).toFixed(1) + '°C  '),
+        formatter: (value, { seriesIndex, dataPointIndex, w }) => String(seriesIndex > 0 ? '  ' + Number(value).toFixed(1) + '%' : (Number(value) - 40).toFixed(1) + '°C  '),
       },
       xaxis: {
         categories: ['Temp', 'Wilg'],
