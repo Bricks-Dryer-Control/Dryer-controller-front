@@ -21,19 +21,22 @@
                           :isNew="isNew"
                           @refresh="Refresh">
       </AppAutoControlEdit>
+      <AppAutoControlPoints :points="autoControl.sets">
+      </AppAutoControlPoints>
     </v-row>
   </div>
 </template>
 
 <script lang="ts">
 import AppAutoControlEdit from "@/components/AppAutoControlEdit.vue";
+import AppAutoControlPoints from "@/components/AppAutoControlPoints.vue";
 import AutoControlService from "@/services/AutoControlService";
 import IAutoControl from "@/types/IAutoControl";
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
-  components: { AppAutoControlEdit },
+  components: { AppAutoControlEdit, AppAutoControlPoints },
 })
 export default class AutoControl extends Vue {
   private readonly autoControlService: AutoControlService;
@@ -85,7 +88,13 @@ export default class AutoControl extends Vue {
       maxOutFlow: 480,
       percent: 0,
       offset: 0,
-      sets: []
+      sets: [{
+        timeSeconds: 0,
+        temperature: 0,
+        inFlow: 0,
+        outFlow: 0,
+        throughFlow: 0
+        }]
     }
   }
 
