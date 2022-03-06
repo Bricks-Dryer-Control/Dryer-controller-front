@@ -24,19 +24,30 @@
       <AppAutoControlPoints :points="autoControl.sets">
       </AppAutoControlPoints>
     </v-row>
+    <v-row v-if="show"
+           style="justify-content: center">
+      <AppChamberAutoControlChart :points="autoControl.sets">
+      </AppChamberAutoControlChart>
+    </v-row>
+    <v-row v-if="show">
+      <v-col>
+        <v-btn :style="{left: '50%', transform:'translateX(-50%)'}">Zapisz</v-btn>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script lang="ts">
 import AppAutoControlEdit from "@/components/AppAutoControlEdit.vue";
 import AppAutoControlPoints from "@/components/AppAutoControlPoints.vue";
+import AppChamberAutoControlChart from "@/components/AppChamberAutoControlChart.vue";
 import AutoControlService from "@/services/AutoControlService";
 import IAutoControl from "@/types/IAutoControl";
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
-  components: { AppAutoControlEdit, AppAutoControlPoints },
+  components: { AppAutoControlEdit, AppAutoControlPoints, AppChamberAutoControlChart },
 })
 export default class AutoControl extends Vue {
   private readonly autoControlService: AutoControlService;

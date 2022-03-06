@@ -14,20 +14,24 @@
                     type="number"
                     v-model.number="autoControl.controlDifference"
       ></v-text-field>
-      <v-text-field label="Minimalny nawiew"
+      <v-text-field v-if="false"
+                    label="Minimalny nawiew"
                     type="number"
                     v-model.number="autoControl.minInFlow"
       ></v-text-field>
-      <v-text-field label="Maksymalny nawiew"
+      <v-text-field v-if="false"
+                    label="Maksymalny nawiew"
                     type="number"
                     v-model.number="autoControl.maxInFlow"
       ></v-text-field>
-      <v-text-field label="Jaki procent nawiewu stanowi przerzut"
+      <v-text-field v-if="false"
+                    label="Jaki procent nawiewu stanowi przerzut"
                     type="number"
                     suffix="%"
                     v-model.number="autoControl.percent"
       ></v-text-field>
-      <v-text-field label="Przesunięcie przerzutu"
+      <v-text-field v-if="false"
+                    label="Przesunięcie przerzutu"
                     type="number"
                     v-model.number="autoControl.offset"
       ></v-text-field>
