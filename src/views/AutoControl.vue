@@ -5,14 +5,23 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-select
-            :items="autoControlList"
-            v-model="choosedName"
-            label="Wybierz sterowanie"
-          ></v-select>
-        <v-btn @click="Create">Nowe</v-btn>
-        <v-btn :disabled="!show || isNew"
-               @click="Copy">Kopia</v-btn>
+        <v-container>
+          <v-select
+              class="mr-2"
+              :items="autoControlList"
+              v-model="choosedName"
+              label="Wybierz sterowanie"
+            ></v-select>
+          <v-btn 
+              class="px-4 mr-2"
+              color="primary"
+              @click="Create">Nowe</v-btn>
+          <v-btn 
+              class="px-4"
+              color="primary"
+              :disabled="!show || isNew"
+              @click="Copy">Kopia</v-btn>
+        </v-container>
       </v-col>
     </v-row>
     <v-row v-if="show"
@@ -31,7 +40,13 @@
     </v-row>
     <v-row v-if="show">
       <v-col>
-        <v-btn :style="{left: '50%', transform:'translateX(-50%)'}">Zapisz</v-btn>
+        <v-btn color="success"
+               :style="{left: '50%', transform:'translateX(-50%)'}"
+               @click="Save">Zapisz</v-btn>
+        <v-btn color="error"
+               :style="{left: '50%', transform:'translateX(-50%)'}"
+               :disabled="isNew"
+               @click="Remove">Usuń</v-btn>
       </v-col>
     </v-row>
   </div>
@@ -81,6 +96,16 @@ export default class AutoControl extends Vue {
   Copy() {
     this.autoControl.name = '';
     this.isNew = true;
+  }
+
+  Save() {
+    this.autoControlService.sendOne(this.autoControl)
+      .then(() => this.$router.go(0));
+  }
+
+  Remove() {
+    this.autoControlService.delete(this.choosedName)
+      .then(() => this.$router.go(0));
   }
 
   NewAutoControl(): IAutoControl

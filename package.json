@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "apexcharts": "^3.33.1",
+    "binary-search-bounds": "^2.0.5",
     "core-js": "^3.21.0",
     "typed-rest-client": "^1.8.6",
     "vue": "^2.6.14",

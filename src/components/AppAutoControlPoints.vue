@@ -13,7 +13,8 @@
         </v-row>
         <v-row>
           <v-col>
-            <v-btn @click="add">Dodaj</v-btn>
+            <v-btn color="primary"
+                   @click="add">Dodaj</v-btn>
           </v-col>
           <v-col>
             <v-btn  :disabled="currentIndex===0"
@@ -27,6 +28,7 @@
                           type="number"
                           v-model.number="currentHour"
                           :disabled="currentIndex===0"
+                          @change="saveCurrent"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -34,6 +36,7 @@
                           type="number"
                           v-model.number="currentMinute"
                           :disabled="currentIndex===0"
+                          @change="saveCurrent"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -41,7 +44,17 @@
                           type="number"
                           v-model.number="currentSecond"
                           :disabled="currentIndex===0"
+                          @change="saveCurrent"
             ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row v-if="timeNotDistinct">
+          <v-col>
+            <v-alert
+              outlined
+              light
+              type="error"
+            >Podany czas już w użyciu</v-alert>
           </v-col>
         </v-row>
         <v-row>
@@ -49,6 +62,7 @@
             <v-text-field label="Nastawa temperatury"
                           type="number"
                           v-model.number="current.temperature"
+                          @change="saveCurrent"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -57,18 +71,21 @@
             <v-text-field label="Nastawa nawiew"
                           type="number"
                           v-model.number="current.inFlow"
+                          @change="saveCurrent"
             ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field label="Nastawa odciąg"
                           type="number"
                           v-model.number="current.outFlow"
+                          @change="saveCurrent"
             ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field label="Nastawa przerzut"
                           type="number"
                           v-model.number="current.throughFlow"
+                          @change="saveCurrent"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -80,6 +97,7 @@
 import IAutoControlItem from '@/types/IAutoControlItem';
 import Vue from 'vue'
 import { Component, Prop, Watch } from 'vue-property-decorator'
+import bsearch from 'binary-search-bounds'
 
   @Component
   export default class AppAutoControlPoints extends Vue {
@@ -88,30 +106,29 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
     currentHour: number = 0;
     currentMinute: number = 0;
     currentSecond: number = 0;
+    current: IAutoControlItem = this.newPoint;
+    timeNotDistinct: boolean = false;
     
-    get pointItems(): object[] {
-      let result = this.points.map((p, i) => { return {
+    get pointItems(): {text: string, value: number}[] {
+      return this.points.map((p, i) => { return {
         text: this.getTime(p.timeSeconds),
         value: i
       }});
-      result.sort((a, b) => this.points[a.value].timeSeconds - this.points[b.value].timeSeconds);
-      return result;
-    }
-
-    get current(): IAutoControlItem {
-      return this.points[this.currentIndex];
     }
 
     add() {
       if (this.current) {
         const newOne = Object.assign({}, this.current);
-        this.points.push(newOne);
+        this.currentIndex = this.points.push(newOne) - 1;
       }
     }
 
     remove() {
-      if (this.currentIndex > 0) {
-          this.points.splice(this.currentIndex);
+      const toRemoveIndex= this.currentIndex
+
+      if (toRemoveIndex> 0) {
+          this.currentIndex = toRemoveIndex - 1;
+          this.points.splice(toRemoveIndex, 1);
       }
     }
 
@@ -137,6 +154,43 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
       };
     }
 
+    saveCurrent() {
+      if (!this.current)
+        return;
+
+      const currentIndex = this.currentIndex;
+      const prev = currentIndex > 0 ? this.points[currentIndex - 1] : undefined
+      const next = currentIndex < this.points.length - 1 ? this.points[currentIndex + 1] : undefined
+      const prevOk = !prev || prev.timeSeconds <= this.current.timeSeconds
+      const nextOk = !next || next.timeSeconds >= this.current.timeSeconds
+      const changedElement = Object.assign({}, this.current);
+
+      if (prevOk && nextOk) {
+        Vue.set(this.points, currentIndex, changedElement);
+        this.currentIndexChanged(this.currentIndex)
+      } else {
+        this.points.splice(currentIndex, 1);
+        const newIndex = bsearch.le(this.points, changedElement, (a, b) => a.timeSeconds - b.timeSeconds) + 1;
+
+        if (newIndex === this.points.length) {
+          this.points.push(changedElement);
+        } else {
+          this.points.splice(newIndex, 0, changedElement);
+        }
+
+        this.currentIndex = newIndex;
+      }
+
+      this.timeNotDistinct = (prev && prev.timeSeconds === this.current.timeSeconds) 
+                          || (next && next.timeSeconds === this.current.timeSeconds)
+                          || false;
+    }
+
+    @Watch('currentIndex')
+    currentIndexChanged(newIndex: number) {
+      this.current = Object.assign(this.current, this.points[newIndex]);
+    }
+
     @Watch('points')
     pointsChanged(newPoints: IAutoControlItem[]) {
       if (!newPoints[0]) {
@@ -144,17 +198,33 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
       } else if (newPoints[0].timeSeconds !== 0) {
         newPoints.splice(0, 0, this.newPoint)
       }
+
+      let lastTime = 0;
+      for (const el of newPoints) {
+        if (el.timeSeconds < lastTime) {
+          newPoints.sort((a, b) => a.timeSeconds - b.timeSeconds);
+          return;
+        }
+
+        lastTime = el.timeSeconds;
+      }
+
+      this.currentIndexChanged(this.currentIndex);
     }
 
     @Watch('currentHour')
     @Watch('currentMinute')
     @Watch('currentSecond')
     timeInputChanged() {
+      if (!this.current)
+        return;
+
       let result = 3600 * this.currentHour + 60 * this.currentMinute + this.currentSecond;
       if (result < 0)
         result = 0;
 
       this.current.timeSeconds = result;
+      this.timeSecondsChanged(result);
     }
 
     @Watch('current.timeSeconds')
