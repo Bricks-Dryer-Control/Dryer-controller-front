@@ -13,7 +13,8 @@ build site:
     paths:
     - node_modules/
   script:
-    - npm run build --openssl-legacy-provider
+    - NODE_OPTIONS=--openssl-legacy-provider
+    - npm run build
   artifacts:
     expire_in: 1 week
     paths:
