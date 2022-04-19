@@ -1,4 +1,4 @@
-image: node:latest
+image: node:16
 
 stages:
   - build
@@ -13,7 +13,6 @@ build site:
     paths:
     - node_modules/
   script:
-    - NODE_OPTIONS=--openssl-legacy-provider
     - npm run build
   artifacts:
     expire_in: 1 week
