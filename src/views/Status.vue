@@ -4,7 +4,8 @@
       <div  v-for="chamber in mychambers"
             :key="chamber.no"
             class="pa-1 ma-0">
-        <AppChamberInfo :chamberInfo="chamber"
+        <AppChamberInfo class="my-3"
+                        :chamberInfo="chamber"
                         :clickable="true"
         />
       </div>

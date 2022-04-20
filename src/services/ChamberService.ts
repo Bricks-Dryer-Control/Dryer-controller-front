@@ -1,4 +1,4 @@
-import IChamberInfo from '@/types/IChamberInfo';
+import IChamberInfo, { fixChamberInfoStatus } from '@/types/IChamberInfo';
 import IChamberValues from '@/types/IChamberValues';
 import * as rest from 'typed-rest-client/RestClient'
 
@@ -23,6 +23,7 @@ export default class ChamberService {
         var result = await this.restClient.get<IChamberInfo[]>('/Chamber');
         return new Promise((resolve, reject) => {
             if (result.statusCode === 200 && result.result) {
+                result.result.forEach(fixChamberInfoStatus);
                 ChamberService.MergeChamberInfosArray(result.result)
                 resolve(ChamberService.actualState);
             }
@@ -42,8 +43,7 @@ export default class ChamberService {
                 if (result.statusCode === 200 && result.result) {
                     if (ChamberService.actualState[no - 1].readingTime < result.result.readingTime)
                     {
-                        if (result.result.status.working === "waiting" && !result.result.status.isActive)
-                            result.result.status.working = "off";
+                        fixChamberInfoStatus(result.result);
                         ChamberService.actualState[no - 1] = result.result;
                     }
                     resolve(ChamberService.actualState[no - 1]);
@@ -61,8 +61,10 @@ export default class ChamberService {
         const result = await this.restClient.create<IChamberInfo>(`/Chamber/${no}/Set`, setValues);
         return new Promise((resolve, reject) => {
             if (result.statusCode === 200 && result.result) {
-                if (ChamberService.actualState[no - 1].readingTime < result.result.readingTime)
+                if (ChamberService.actualState[no - 1].readingTime < result.result.readingTime) {
+                    fixChamberInfoStatus(result.result)
                     ChamberService.actualState[no - 1] = result.result;
+                }
                 resolve(ChamberService.actualState[no - 1]);
             }
             else
@@ -75,8 +77,10 @@ export default class ChamberService {
         const result = await this.restClient.create<IChamberInfo>(`/Chamber/${no}/Turn`, value);
         return new Promise((resolve, reject) => {
             if (result.statusCode === 200 && result.result) {
-                if (ChamberService.actualState[no - 1].readingTime < result.result.readingTime)
+                if (ChamberService.actualState[no - 1].readingTime < result.result.readingTime) {
+                    fixChamberInfoStatus(result.result)
                     ChamberService.actualState[no - 1] = result.result;
+                }
                 resolve(ChamberService.actualState[no - 1]);
             }
             else

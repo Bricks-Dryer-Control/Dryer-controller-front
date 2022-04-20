@@ -1,4 +1,4 @@
-import IChamberStatus from "./IChamberStatus";
+import IChamberStatus, { fixStatus } from "./IChamberStatus";
 import IChamberValues from "./IChamberValues";
 
 export default interface IChamberInfo {
@@ -9,4 +9,8 @@ export default interface IChamberInfo {
     actualActuators: IChamberValues
     setActuators: IChamberValues
     status: IChamberStatus
+}
+
+export function fixChamberInfoStatus(chamberInfo: IChamberInfo) {
+    fixStatus(chamberInfo.status);
 }

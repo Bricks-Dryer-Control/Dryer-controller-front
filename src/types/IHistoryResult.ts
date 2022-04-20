@@ -23,3 +23,13 @@ export default interface IHistoryResult {
         }
     }[],
 }
+
+
+const statuses = ["off", "waiting", "queued", "working", "addon", "error"];
+export function fixHistoryResultStatus(historyResult: IHistoryResult) {
+    historyResult.status.forEach(s => {
+        if (Number.isInteger(s.value.working)) {
+            s.value.working = statuses[Number(s.value.working)] as "off" | "waiting" | "queued" | "working" | "addon" | "error";
+        }  
+    });
+}

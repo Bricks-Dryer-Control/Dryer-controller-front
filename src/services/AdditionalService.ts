@@ -1,4 +1,5 @@
 import IAdditionalInfo from '@/types/IAdditionalInfo';
+import { fixStatus } from '@/types/IChamberStatus';
 import * as rest from 'typed-rest-client/RestClient'
 
 export default class AdditionalService {
@@ -18,6 +19,10 @@ export default class AdditionalService {
         const result = await this.restClient.get<IAdditionalInfo>(`/Additional`);
         return new Promise((resolve, reject) => {
             if (result.statusCode === 200 && result.result) {
+                var roofStatuses = result.result.roofs.map(r => r.roof.status);
+                var wentStatuses = result.result.wents.map(w => w.status);
+                roofStatuses.concat(wentStatuses).forEach(fixStatus);
+
                 AdditionalService.actualState = result.result;
                 resolve(AdditionalService.actualState);
             }

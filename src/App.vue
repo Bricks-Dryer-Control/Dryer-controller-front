@@ -4,7 +4,7 @@
       app
       color="primary"
     >
-      <v-row>
+      <v-row class="pl-4">
         <v-btn class="mr-2" to="/Status">Status</v-btn>
         <v-btn class="mr-2" to="/Control">Kontrola komory</v-btn>
         <v-btn class="mr-2" to="/Additional">Dodatkowe</v-btn>
@@ -17,7 +17,7 @@
       <router-view/>
     </v-main>
 
-    <v-footer class="py-0" app>
+    <v-footer class="py-3" app>
       <Footer />
     </v-footer>
   </v-app>

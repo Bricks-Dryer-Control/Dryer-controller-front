@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pa-2 ma-2">
     <AppHistoryChart />
   </div>
 </template>

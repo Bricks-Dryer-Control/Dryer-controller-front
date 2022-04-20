@@ -2,8 +2,9 @@
   <div class="ma-2 pa-0">
     <v-row style="justify-content: center">
         <v-pagination
-        v-model="no"
-        :length="chamberCount"
+          class="pt-4"
+          v-model="no"
+          :length="chamberCount"
       ></v-pagination>
     </v-row>
     <v-row class="pa-2" style="justify-content: center">

@@ -1,16 +1,16 @@
 <template>
-  <div class="ma-0 pa-0">
+  <div class="my-4 pa-0">
     <v-row class="pa-0" style="justify-content: center">
       <AppAddonRoofControl v-for="(roof, i) in additionalInfo.roofs"
                            :key="'roof' + i"
-                           class="px-2 ma-2"
+                           class="pa-2 ma-2"
                            :no="i + 1"
                            :values="roof"
                            @send="sendRoof">
       </AppAddonRoofControl>
       <AppAddonOtherControl v-for="(went, i) in additionalInfo.wents"
                             :key="'went' + i"
-                            class="px-2 ma-2" 
+                            class="pa-2 ma-2" 
                             :no="i + 1"
                             :value="went"
                             @send="sendWent">
