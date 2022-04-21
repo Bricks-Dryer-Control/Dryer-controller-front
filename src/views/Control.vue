@@ -44,19 +44,11 @@ import IChamberInfo from '@/types/IChamberInfo';
   },
 })
 export default class Control extends Vue {
-  private readonly chamberService: ChamberService;
+  private readonly chamberService: ChamberService = new ChamberService('http://localhost:5000');
   private chamberServiceTrigger = setInterval(this.checkStatus, 1000);
-  private chamberInfo: IChamberInfo;
-  private newSetActuators: IChamberValues;
-  private newIsOn: boolean;
-
-  constructor() {
-    super();
-    this.chamberService = new ChamberService('http://localhost:5000');
-    this.chamberInfo = this.chamberService.ActualState[this.no - 1];
-    this.newSetActuators = this.chamberInfo.setActuators;
-    this.newIsOn = this.chamberInfo.status.isActive;
-  }
+  private chamberInfo: IChamberInfo = this.chamberService.ActualState[this.no - 1];
+  private newSetActuators: IChamberValues = this.chamberInfo.setActuators;
+  private newIsOn: boolean = this.chamberInfo.status.isActive;
   
   checkStatus(timer: any) {
     if (this.chamberService && Number.isInteger(this.no)) {
@@ -73,9 +65,6 @@ export default class Control extends Vue {
   }
   set no(value) {
     this.$router.push({ name: 'Control', params: { chamberNo: String(value) }})
-    this.chamberInfo = this.chamberService.ActualState[value - 1];
-    this.newSetActuators = this.chamberInfo.setActuators;
-    this.newIsOn = this.chamberInfo.status.isActive;
   }
 
   get chamberCount(): number {
@@ -97,6 +86,13 @@ export default class Control extends Vue {
 
   SendListening(value: boolean) {
       this.chamberService.setListening(this.no, value);
+  }
+
+  @Watch("no")
+  noChanged(newValue: number) {
+    this.chamberInfo = this.chamberService.ActualState[newValue - 1];
+    this.newSetActuators = this.chamberInfo.setActuators;
+    this.newIsOn = this.chamberInfo.status.isActive;
   }
 
   beforeDestroy() {
