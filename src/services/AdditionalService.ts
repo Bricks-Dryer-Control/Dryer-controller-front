@@ -24,6 +24,7 @@ export default class AdditionalService {
                 roofStatuses.concat(wentStatuses).forEach(fixStatus);
 
                 AdditionalService.actualState = result.result;
+                this.fixAdditionalInfoStatusses(AdditionalService.actualState);
                 resolve(AdditionalService.actualState);
             }
             else
@@ -37,6 +38,7 @@ export default class AdditionalService {
         return new Promise((resolve, reject) => {
             if (result.statusCode === 200 && result.result) {
                 AdditionalService.actualState = result.result;
+                this.fixAdditionalInfoStatusses(AdditionalService.actualState);
                 resolve(AdditionalService.actualState);
             }
             else
@@ -50,10 +52,17 @@ export default class AdditionalService {
         return new Promise((resolve, reject) => {
             if (result.statusCode === 200 && result.result) {
                 AdditionalService.actualState = result.result;
+                this.fixAdditionalInfoStatusses(AdditionalService.actualState);
                 resolve(AdditionalService.actualState);
             }
             else
                 reject(result.statusCode);
         });
+    }
+
+    private fixAdditionalInfoStatusses(ai: IAdditionalInfo) {
+        ai.roofs.forEach(r => fixStatus(r.roof.status));
+        ai.roofs.forEach(r => fixStatus(r.through.status));
+        ai.wents.forEach(w => fixStatus(w.status));
     }
 }
