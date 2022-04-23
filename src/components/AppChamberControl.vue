@@ -1,26 +1,16 @@
 <template>
-  <v-card class="px-2" width="380px">
+  <v-card class="px-2" width="320px">
     <label>Kontrola</label>
     <v-switch label="Włączona"
               v-model="newIsOn"
     />
     <v-row>
       <v-col 
-        class="py-0"
-        cols="7">
+        class="py-0">
         <v-text-field
                       v-model="newValues.inFlow"
                       type="number"
                       label="Nawiew"
-        />
-      </v-col>
-      <v-col 
-        class="py-0"
-        cols="4">
-        <v-text-field
-                      v-model="maxValues.inFlow"
-                      type="number"
-                      label="Max auto"
         />
       </v-col>
     </v-row>
@@ -33,21 +23,11 @@
     />
     <v-row>
       <v-col 
-        class="py-0"
-        cols="7">
+        class="py-0">
         <v-text-field
                       v-model="newValues.outFlow"
                       type="number"
                       label="Odciąg"
-        />
-      </v-col>
-      <v-col 
-        class="py-0"
-        cols="4">
-        <v-text-field
-                      v-model="maxValues.outFlow"
-                      type="number"
-                      label="Max auto"
         />
       </v-col>
     </v-row>
@@ -60,21 +40,11 @@
     />
     <v-row>
       <v-col 
-        class="py-0"
-        cols="7">
+        class="py-0">
         <v-text-field
                       v-model="newValues.throughFlow"
                       type="number"
                       label="Przerzut"
-        />
-      </v-col>
-      <v-col 
-        class="py-0"
-        cols="4">
-        <v-text-field
-                      v-model="maxValues.throughFlow"
-                      type="number"
-                      label="Max auto"
         />
       </v-col>
     </v-row>

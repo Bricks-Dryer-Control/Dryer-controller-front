@@ -17,10 +17,14 @@
               color="primary"
               @click="Create">Nowe</v-btn>
           <v-btn 
-              class="px-4"
+              class="px-4 mr-2"
               color="primary"
               :disabled="!show || isNew"
               @click="Copy">Kopia</v-btn>
+          <v-btn 
+              class="px-4 mr-2"
+              color="secondary"
+              @click="Import">Import</v-btn>
         </v-container>
       </v-col>
     </v-row>
@@ -49,11 +53,15 @@
                @click="Remove">Usuń</v-btn>
       </v-col>
     </v-row>
+    <AppAutoControlImport 
+      v-model="importDialog"
+      @import="ImportFile" />
   </div>
 </template>
 
 <script lang="ts">
 import AppAutoControlEdit from "@/components/AppAutoControlEdit.vue";
+import AppAutoControlImport from "@/components/AppAutoControlImport.vue";
 import AppAutoControlPoints from "@/components/AppAutoControlPoints.vue";
 import AppChamberAutoControlChart from "@/components/AppChamberAutoControlChart.vue";
 import AutoControlService from "@/services/AutoControlService";
@@ -62,7 +70,7 @@ import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
-  components: { AppAutoControlEdit, AppAutoControlPoints, AppChamberAutoControlChart },
+  components: { AppAutoControlEdit, AppAutoControlPoints, AppChamberAutoControlChart, AppAutoControlImport },
 })
 export default class AutoControl extends Vue {
   private readonly autoControlService: AutoControlService;
@@ -71,6 +79,7 @@ export default class AutoControl extends Vue {
   private autoControl: IAutoControl = this.NewAutoControl();
   private isNew: boolean = false;
   private show: boolean = false;
+  private importDialog: boolean = false;
 
   constructor() {
     super();
@@ -115,7 +124,7 @@ export default class AutoControl extends Vue {
       timeToSetSeconds: 0,
       temperatureDifference: 5,
       controlDifference: 10,
-      controlType: 4,
+      controlType: 1,
       kp: 0,
       ki: 0,
       minInFlow: 0,
@@ -132,6 +141,14 @@ export default class AutoControl extends Vue {
         throughFlow: 0
         }]
     }
+  }
+
+  Import() {
+    this.importDialog = true;
+  }
+
+  ImportFile(name: string, path: string) {
+    this.autoControlService.import({name, path});
   }
 
   @Watch("choosedName")

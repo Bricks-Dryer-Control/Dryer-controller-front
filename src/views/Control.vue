@@ -17,7 +17,11 @@
                          @send="Send"
                          @sendListening="SendListening"
       />
-      <AppChamberAutoControl class="ml-2 mb-2" />
+      <AppChamberAutoControl class="ml-2 mb-2" 
+                             :no="no"
+                             :name="chamberInfo.autoControlStatus.name"
+                             :time="formatedTime"
+                             :active="chamberInfo.status.isAuto" />
       <AppChamberControlChart 
         :chamberNo="no"
         class="ml-2 mb-2" />
@@ -69,6 +73,10 @@ export default class Control extends Vue {
 
   get chamberCount(): number {
     return ChamberService.Count;
+  }
+
+  get formatedTime() {
+    return this.chamberInfo.autoControlStatus.currentTime.split(".")[0];
   }
 
   maximas: IChamberValues = {

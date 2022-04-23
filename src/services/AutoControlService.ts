@@ -1,4 +1,5 @@
 import IAutoControl from '@/types/IAutoControl';
+import IAutoControlStart from '@/types/IAutoControlStart';
 import * as rest from 'typed-rest-client/RestClient'
 
 export default class AutoControlService {
@@ -39,5 +40,17 @@ export default class AutoControlService {
     public async delete(name: string)
     {
         await this.restClient.del<string>(`/auto/${encodeURI(name)}`);
+    }
+
+    public async turn(no: number, value: boolean) {
+        await this.restClient.create(`/auto/${no}/turn`, value);
+    }
+
+    public async start(value: IAutoControlStart) {
+        await this.restClient.create(`/auto/start`, value);
+    }
+
+    public async import(value: {name: string, path: string}) {
+        await this.restClient.create(`/import`, value);
     }
 }
