@@ -13,7 +13,7 @@
       />
       <AppChamberControl class="ml-2 mb-2"
                          :currentSetValues="newSetActuators"
-                         :currentIsOn="newIsOn"
+                         :currentIsOn="chamberInfo.status.isActive"
                          @send="Send"
                          @sendListening="SendListening"
       />
@@ -52,7 +52,6 @@ export default class Control extends Vue {
   private chamberServiceTrigger = setInterval(this.checkStatus, 1000);
   private chamberInfo: IChamberInfo = this.chamberService.ActualState[this.no - 1];
   private newSetActuators: IChamberValues = this.chamberInfo.setActuators;
-  private newIsOn: boolean = this.chamberInfo.status.isActive;
   
   checkStatus(timer: any) {
     if (this.chamberService && Number.isInteger(this.no)) {
@@ -102,7 +101,6 @@ export default class Control extends Vue {
   noChanged(newValue: number) {
     this.chamberInfo = this.chamberService.ActualState[newValue - 1];
     this.newSetActuators = this.chamberInfo.setActuators;
-    this.newIsOn = this.chamberInfo.status.isActive;
   }
 
   beforeDestroy() {

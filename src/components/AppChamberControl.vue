@@ -2,7 +2,8 @@
   <v-card class="px-2" width="320px">
     <label>Kontrola</label>
     <v-switch label="Włączona"
-              v-model="newIsOn"
+              :value="currentIsOn"
+              readonly
     />
     <v-row>
       <v-col 
@@ -68,6 +69,21 @@
         <v-icon>mdi-send</v-icon>Zastosuj
       </v-btn>
     </v-row>
+    
+    <v-row 
+      align="center"
+      justify="space-around"
+      class="pa-2 my-4"
+    >
+      <v-btn v-if="!currentIsOn"
+             color="primary"
+             @click="$emit('sendListening', true)"
+      >Włącz</v-btn>
+      <v-btn v-if="currentIsOn"
+             color="seconadary"
+             @click="$emit('sendListening', false)"
+      >Wyłącz</v-btn>
+    </v-row>
   </v-card>
 </template>
 
@@ -81,23 +97,12 @@
     @Prop() currentSetValues!: IChamberValues;
     @Prop() currentIsOn!: boolean;
 
-    newIsOn: boolean = false;
     newValues: IChamberValues = { inFlow: 0, outFlow: 0, throughFlow: 0 };
     maxValues: IChamberValues = { inFlow: 480, outFlow: 480, throughFlow: 150 };
 
     private inColor = ['red lighten-2', 'red', 'red lighten-4'];
     private outColor = ['blue lighten-2', 'blue', 'blue lighten-4'];
     private throughColor = ['yellow lighten-2', 'yellow', 'yellow lighten-4'];
-
-    @Watch("currentIsOn")
-    currentIsOnChanged(newValue: boolean) {
-      this.newIsOn = newValue;
-    }
-
-    @Watch("newIsOn")
-    newIsOnChanged(newValue: boolean) {
-      this.$emit('sendListening', newValue)
-    }
 
     @Watch("currentSetValues")
     currentSetValuesChanged(newValue: IChamberValues) {
@@ -107,8 +112,6 @@
     Clear() {
       if (this.currentSetValues)
         this.newValues = this.currentSetValues;
-      if (this.currentIsOn !== null && this.currentIsOn !== undefined)
-        this.newIsOn = this.currentIsOn;
     }
 
     Send() {
