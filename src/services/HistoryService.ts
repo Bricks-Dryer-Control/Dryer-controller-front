@@ -1,5 +1,5 @@
 import IHistoryRequestData from '@/types/IHistoryRequestData';
-import IHistoryResult, { fixHistoryResultStatus } from '@/types/IHistoryResult';
+import IHistoryResult, { fixHistoryResult } from '@/types/IHistoryResult';
 import * as rest from 'typed-rest-client/RestClient'
 
 export default class HistoryService {
@@ -14,7 +14,7 @@ export default class HistoryService {
         const result = await this.restClient.get<IHistoryResult>(`/History?no=${data.no}&from=${data.from}&to=${data.to}`);
         return new Promise((resolve, reject) => {
             if (result.statusCode === 200 && result.result) {
-                fixHistoryResultStatus(result.result);
+                fixHistoryResult(result.result);
                 resolve(result.result);
             }
             else

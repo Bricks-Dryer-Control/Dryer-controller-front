@@ -148,7 +148,8 @@ export default class AutoControl extends Vue {
   }
 
   ImportFile(name: string, path: string) {
-    this.autoControlService.import({name, path});
+    this.autoControlService.import({name, path})
+      .then(() => this.Refresh());
   }
 
   @Watch("choosedName")

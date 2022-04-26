@@ -93,7 +93,7 @@
 
     getUtc(date: Date): string {
       const splited = date.toISOString().split(/\D/);
-      return new Date(Number(splited[0]), Number(splited[1]), Number(splited[2])).toISOString();
+      return new Date(Number(splited[0]), Number(splited[1]) - 1, Number(splited[2])).toISOString();
     }
 
     formatDate(date: Date): string {
@@ -101,15 +101,15 @@
     }
 
     parseData(data: IHistoryResult) {
-      const temps = data.sensors.map(v => [v.timeUtc, v.value.temperature]);
-      const hums = data.sensors.map(v => [v.timeUtc, v.value.humidity]);
-      const inFlows = data.status.map(v => [v.timeUtc, v.value.inFlowPosition]);
-      const outFlows = data.status.map(v => [v.timeUtc, v.value.outFlowPosition]);
-      const throughFlows = data.status.map(v => [v.timeUtc, v.value.throughFlowPosition]);
-      const inFlowSets = data.status.map(v => [v.timeUtc, v.value.inFlowSet]);
-      const outFlowSets = data.status.map(v => [v.timeUtc, v.value.outFlowSet]);
-      const throughFlowSets = data.status.map(v => [v.timeUtc, v.value.throughFlowSet]);
-
+      const temps = data.sensors.map(v => [v.time, v.temperature]);
+      const hums = data.sensors.map(v => [v.time, v.humidity]);
+      const inFlows = data.status.map(v => [v.time, v.inFlowPosition]);
+      const outFlows = data.status.map(v => [v.time, v.outFlowPosition]);
+      const throughFlows = data.status.map(v => [v.time, v.throughFlowPosition]);
+      const inFlowSets = data.status.map(v => [v.time, v.inFlowSet]);
+      const outFlowSets = data.status.map(v => [v.time, v.outFlowSet]);
+      const throughFlowSets = data.status.map(v => [v.time, v.throughFlowSet]);
+      
       this.tempHumSeries = [{
         name: "Temperatura",
           data: temps
@@ -160,33 +160,33 @@
 
     tempHumSeries = [{
       name: "Temperatura",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Wilgotność",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Nastawa",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     }]
 
     actuatorSeries = [{
       name: "Nawiew",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Odciąg",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Przerzut",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Nast. nawiew",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Nast. odciąg",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Nast. przerzut",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     }]
 
     statusSeries = [{
@@ -223,6 +223,7 @@
         text: "Historia komory"
       },
       xaxis: {
+        labels: { datetimeUTC: false },
         type: 'datetime'
       },
       yaxis: {
@@ -252,6 +253,7 @@
         },
       },
       xaxis: {
+        labels: { datetimeUTC: false },
         type: 'datetime'
       },
       yaxis: {
@@ -301,6 +303,7 @@
         type: 'solid'
       },
       xaxis: {
+        labels: { datetimeUTC: false },
         type: 'datetime',
       },
       yaxis: {

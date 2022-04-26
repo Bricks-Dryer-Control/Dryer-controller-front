@@ -42,7 +42,7 @@
         const now = new Date();
         let hourAgo = new Date(now);
         hourAgo.setHours(now.getHours() - 1);
-        this.historyService.getHistory({ no: this.chamberNo, from: now.toISOString(), to: hourAgo.toISOString() })
+        this.historyService.getHistory({ no: this.chamberNo, from: hourAgo.toISOString(), to: now.toISOString() })
           .then(this.parseData);
       } else {
         clearInterval(timer);
@@ -65,14 +65,14 @@
         return;
       }
 
-      const temps = data.sensors.map(v => [v.timeUtc, v.value.temperature]);
-      const hums = data.sensors.map(v => [v.timeUtc, v.value.humidity]);
-      const inFlows = data.status.map(v => [v.timeUtc, v.value.inFlowPosition]);
-      const outFlows = data.status.map(v => [v.timeUtc, v.value.outFlowPosition]);
-      const throughFlows = data.status.map(v => [v.timeUtc, v.value.throughFlowPosition]);
-      const inFlowSets = data.status.map(v => [v.timeUtc, v.value.inFlowSet]);
-      const outFlowSets = data.status.map(v => [v.timeUtc, v.value.outFlowSet]);
-      const throughFlowSets = data.status.map(v => [v.timeUtc, v.value.throughFlowSet]);
+      const temps = data.sensors.map(v => [v.time, v.temperature]);
+      const hums = data.sensors.map(v => [v.time, v.humidity]);
+      const inFlows = data.status.map(v => [v.time, v.inFlowPosition]);
+      const outFlows = data.status.map(v => [v.time, v.outFlowPosition]);
+      const throughFlows = data.status.map(v => [v.time, v.throughFlowPosition]);
+      const inFlowSets = data.status.map(v => [v.time, v.inFlowSet]);
+      const outFlowSets = data.status.map(v => [v.time, v.outFlowSet]);
+      const throughFlowSets = data.status.map(v => [v.time, v.throughFlowSet]);
 
       this.tempHumSeries = [{
         name: "Temperatura",
@@ -107,33 +107,33 @@
     
     tempHumSeries = [{
       name: "Temperatura",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Wilgotność",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Nastawa",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     }]
 
     actuatorSeries = [{
       name: "Nawiew",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Odciąg",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Przerzut",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Nast. nawiew",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Nast. odciąg",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     },{
       name: "Nast. przerzut",
-      data: [] as (number | Date)[][]
+      data: [] as number[][]
     }]
 
     statusSeries = [{
@@ -170,6 +170,7 @@
         text: "Historia komory " + String(this.chamberNo)
       },
       xaxis: {
+        labels: { datetimeUTC: false },
         type: 'datetime'
       },
       yaxis: {
@@ -199,6 +200,7 @@
         },
       },
       xaxis: {
+        labels: { datetimeUTC: false },
         type: 'datetime'
       },
       yaxis: {
@@ -248,6 +250,7 @@
         type: 'solid'
       },
       xaxis: {
+        labels: { datetimeUTC: false },
         type: 'datetime',
       },
       yaxis: {
