@@ -75,9 +75,10 @@ export default class Control extends Vue {
   }
 
   get formatedTime() {
-    const { groups: { days, time } } = /((?<days>\d+)\.)?(?<time>\d+:\d+:\d+)(.\d*)/.exec(this.chamberInfo.autoControlStatus.currentTime) as any;
-
-    return days ? `${days}d ${time}` : time;
+    const { groups: { days, time, minus } } = /(?<minus>-)?((?<days>\d+)\.)?(?<time>\d+:\d+:\d+)(.\d*)/.exec(this.chamberInfo.autoControlStatus.currentTime) as any;
+    if (minus)
+      return  days ? `- ${days}d ${time}` : `- ${time}`;
+    return  days ? `${days}d ${time}` : time
   }
 
   maximas: IChamberValues = {
