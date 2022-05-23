@@ -64,6 +64,18 @@
       return pos ? pos : 0;
     }
 
+    get outFlowOffset() {
+      return this.chamberInfo.status.outFlowOffset;
+    }
+
+    labelFormatter(value: number, opts: { seriesIndex: number, dataPointIndex: number, w: any }): string {
+      if (opts.dataPointIndex == 1) {
+        return String(value - this.outFlowOffset);
+      }
+
+      return String(value);
+    }
+
     get backGroundColor() {
       switch (this.workingStatus) {
         case 'off':
@@ -225,6 +237,7 @@
           colors: ['#212121'],
           fontSize: "18px"
         },
+        formatter: this.labelFormatter,
       },
       xaxis: {
         categories: ['Nawiew', 'Odciąg', 'Przerzut'],
@@ -265,6 +278,11 @@
           }
         },
       },
+      tooltip: {
+        y: {
+          formatter: this.labelFormatter,
+        }
+      }
     }
 
     get actuatorsSeries() {

@@ -14,6 +14,7 @@
       <AppChamberControl class="ml-2 mb-2"
                          :currentSetValues="newSetActuators"
                          :currentIsOn="chamberInfo.status.isActive"
+                         :outFlowOffset="chamberInfo.status.outFlowOffset"
                          @send="Send"
                          @sendListening="SendListening"
       />

@@ -33,8 +33,8 @@
       </v-col>
     </v-row>
     <v-slider v-model="newValues.outFlow"
-              min="0"
-              max="480"
+              :min="outFlowMin"
+              :max="outFlowMax"
               :color="outColor[0]"
               :thumb-color="outColor[1]"
               :track-color="outColor[2]"
@@ -95,10 +95,19 @@
   @Component
   export default class AppChamberControl extends Vue {
     @Prop() currentSetValues!: IChamberValues;
+    @Prop() outFlowOffset!: number;
     @Prop() currentIsOn!: boolean;
 
     newValues: IChamberValues = { inFlow: 0, outFlow: 0, throughFlow: 0 };
     maxValues: IChamberValues = { inFlow: 480, outFlow: 480, throughFlow: 150 };
+
+    get outFlowMin() {
+      return -this.outFlowOffset;
+    }
+
+    get outFlowMax() {
+      return 480 - this.outFlowOffset;
+    }
 
     private inColor = ['red lighten-2', 'red', 'red lighten-4'];
     private outColor = ['blue lighten-2', 'blue', 'blue lighten-4'];
@@ -106,16 +115,22 @@
 
     @Watch("currentSetValues")
     currentSetValuesChanged(newValue: IChamberValues) {
-      this.newValues = newValue;
+      this.newValues = { ...newValue };
+      this.newValues.outFlow -= this.outFlowOffset;
     }
 
     Clear() {
-      if (this.currentSetValues)
-        this.newValues = this.currentSetValues;
+      if (this.currentSetValues) {
+        this.newValues = { ...this.currentSetValues };
+        this.newValues.outFlow -= this.outFlowOffset;
+      }
     }
 
     Send() {
-      this.$emit("send", this.newValues);
+      let values = {...this.newValues}
+      values.outFlow += this.outFlowOffset;
+
+      this.$emit("send", values);
     }
 
     mounted() {

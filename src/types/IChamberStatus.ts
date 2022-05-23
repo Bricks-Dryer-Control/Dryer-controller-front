@@ -3,6 +3,7 @@ export default interface IChamberStatus {
     isAuto: boolean;
     queuePosition?: number | undefined;
     isActive: boolean;
+    outFlowOffset: number;
 }
 
 const statuses = ["off", "waiting", "queued", "working", "addon", "error"];
