@@ -74,12 +74,12 @@ import { Component, Prop, Watch } from "vue-property-decorator";
 })
 export default class AutoControl extends Vue {
   private readonly autoControlService: AutoControlService;
-  private autoControlList: string[] = [];
-  private choosedName: string = '';
-  private autoControl: IAutoControl = this.NewAutoControl();
-  private isNew: boolean = false;
-  private show: boolean = false;
-  private importDialog: boolean = false;
+  public autoControlList: string[] = [];
+  public choosedName: string = '';
+  public autoControl: IAutoControl = this.NewAutoControl();
+  public isNew: boolean = false;
+  public show: boolean = false;
+  public importDialog: boolean = false;
 
   constructor() {
     super();

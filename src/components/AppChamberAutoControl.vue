@@ -49,6 +49,10 @@
       @closed="NewClosed"
       @activated="NewActivated"
      />
+     
+    <v-overlay absolute
+               color="blue-grey lighten-2"
+               :value="loading"></v-overlay>
   </v-card>
 </template>
 
@@ -71,14 +75,11 @@ export default class AppChamberAutoControl extends Vue {
     this.autoControlService = new AutoControlService("http://localhost:5000");
   }
 
-  @Prop()
-  private name!: string;
-  @Prop()
-  private time!: string;
-  @Prop()
-  private active!: boolean;
-  @Prop()
-  private no!: number;
+  @Prop() private name!: string;
+  @Prop() private time!: string;
+  @Prop() private active!: boolean;
+  @Prop() private no!: number;
+  @Prop({default: false}) loading!: boolean;
 
   private showNew: boolean = false;
   private newLoading: boolean = false;

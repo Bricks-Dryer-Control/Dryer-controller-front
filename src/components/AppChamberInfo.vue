@@ -29,6 +29,10 @@
                  :options="actuatorsOptions"
                  :series="actuatorsSeries"/>
     </v-row>
+    
+    <v-overlay absolute
+               color="blue-grey lighten-2"
+               :value="loading"></v-overlay>
   </v-card>
 </template>
 
@@ -42,6 +46,7 @@
   export default class AppChamberInfo extends Vue {
     @Prop() chamberInfo!: IChamberInfo;
     @Prop({default: false}) clickable!: boolean;
+    @Prop({default: false}) loading!: boolean;
 
     onClick(event: Event) {
       if (this.clickable)

@@ -10,11 +10,13 @@
     <v-row class="pa-2" style="justify-content: center">
       <AppChamberInfo class="ml-2 mb-2"
                       :chamberInfo="chamberInfo"
+                      :loading="loading"
       />
       <AppChamberControl class="ml-2 mb-2"
                          :currentSetValues="newSetActuators"
                          :currentIsOn="chamberInfo.status.isActive"
                          :outFlowOffset="chamberInfo.status.outFlowOffset"
+                         :loading="loading"
                          @send="Send"
                          @sendListening="SendListening"
       />
@@ -22,7 +24,8 @@
                              :no="no"
                              :name="chamberInfo.autoControlStatus.name"
                              :time="formatedTime"
-                             :active="chamberInfo.status.isAuto" />
+                             :active="chamberInfo.status.isAuto"
+                             :loading="loading" />
       <AppChamberControlChart 
         :chamberNo="no"
         class="ml-2 mb-2" />
@@ -51,13 +54,15 @@ import IChamberInfo from '@/types/IChamberInfo';
 export default class Control extends Vue {
   private readonly chamberService: ChamberService = new ChamberService('http://localhost:5000');
   private chamberServiceTrigger = setInterval(this.checkStatus, 1000);
-  private chamberInfo: IChamberInfo = this.chamberService.ActualState[this.no - 1];
-  private newSetActuators: IChamberValues = this.chamberInfo.setActuators;
-  
+  public chamberInfo: IChamberInfo = this.chamberService.ActualState[this.no - 1];
+  public newSetActuators: IChamberValues = this.chamberInfo.setActuators;
+  public loading = true;
+
   checkStatus(timer: any) {
     if (this.chamberService && Number.isInteger(this.no)) {
       this.chamberService.getChamber(this.no).then(value => {
         this.chamberInfo = value;
+        this.loading = false;
       });
     } else {
       clearInterval(timer);
@@ -68,6 +73,7 @@ export default class Control extends Vue {
     return Number(this.$route.params.chamberNo);
   }
   set no(value) {
+    this.loading = true;
     this.$router.push({ name: 'Control', params: { chamberNo: String(value) }})
   }
 

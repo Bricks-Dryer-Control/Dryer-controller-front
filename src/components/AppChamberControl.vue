@@ -84,6 +84,9 @@
              @click="$emit('sendListening', false)"
       >Wyłącz</v-btn>
     </v-row>
+    <v-overlay absolute
+               color="blue-grey lighten-2"
+               :value="loading"></v-overlay>
   </v-card>
 </template>
 
@@ -97,6 +100,7 @@
     @Prop() currentSetValues!: IChamberValues;
     @Prop() outFlowOffset!: number;
     @Prop() currentIsOn!: boolean;
+    @Prop({default: false}) loading!: boolean;
 
     newValues: IChamberValues = { inFlow: 0, outFlow: 0, throughFlow: 0 };
     maxValues: IChamberValues = { inFlow: 480, outFlow: 480, throughFlow: 150 };

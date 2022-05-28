@@ -37,7 +37,7 @@ export default class ChamberService {
         if (!ChamberService.actualState[0]) {
             await this.getAllChambers();
             return new Promise((resolve, reject) => resolve(ChamberService.actualState[no - 1]));
-        } else if (no > 0 && no < ChamberService.actualState.length) {
+        } else if (no > 0 && no <= ChamberService.actualState.length) {
             const result = await this.restClient.get<IChamberInfo>(`/Chamber/${no}`);
             return new Promise((resolve, reject) => {
                 if (result.statusCode === 200 && result.result) {

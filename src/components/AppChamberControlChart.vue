@@ -15,6 +15,10 @@
                  height="80px"
                  :options="statusOptions"
                  :series="statusSeries"/>
+                 
+    <v-overlay absolute
+               color="blue-grey lighten-2"
+               :value="loading"></v-overlay>
   </v-card>
 </template>
 
@@ -31,6 +35,8 @@
 
     private readonly historyService: HistoryService;
     private historyServiceTrigger = setInterval(this.checkHistory, 5000);
+    public loading = true;
+
     constructor () {
       super();
       this.historyService = new HistoryService('http://localhost:5000');
@@ -55,6 +61,7 @@
 
     @Watch("chamberNo")
     chamberChanged(newNo: number) {
+      this.loading = true;
       clearInterval(this.historyServiceTrigger);
       this.checkHistory(null);
       this.historyServiceTrigger = setInterval(this.checkHistory, 5000);
@@ -64,6 +71,8 @@
       if (data.no !== this.chamberNo) {
         return;
       }
+        
+      this.loading = false;
 
       const temps = data.sensors.map(v => [v.time, v.temperature]);
       const hums = data.sensors.map(v => [v.time, v.humidity]);
