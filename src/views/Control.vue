@@ -26,9 +26,6 @@
                              :time="formatedTime"
                              :active="chamberInfo.status.isAuto"
                              :loading="loading" />
-      <AppChamberControlChart 
-        :chamberNo="no"
-        class="ml-2 mb-2" />
     </v-row>
   </div>
 </template>
