@@ -23,14 +23,6 @@
           ></v-autocomplete>
           <v-row>
             <v-col>
-              <v-btn-toggle v-model="timeMinus">
-                <v-btn value="false">Czas w trakcie</v-btn>
-                <v-btn value="true">Czas uruchomienia</v-btn>
-              </v-btn-toggle>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
               <v-text-field label="Godzina"
                             type="number"
                             v-model.number="currentHour"
@@ -40,12 +32,6 @@
               <v-text-field label="Minuta"
                             type="number"
                             v-model.number="currentMinute"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field label="Sekunda"
-                            type="number"
-                            v-model.number="currentSecond"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -94,8 +80,6 @@
     private curTimeSec: number = 0;
     private currentHour: number = 0;
     private currentMinute: number = 0;
-    private currentSecond: number = 0;
-    private timeMinus: "true" | "false" = "false";
 
     get items() {
       return this.programList ? this.programList : [];
@@ -122,15 +106,15 @@
       if (this.curTimeSec < 0)
         throw 'Negative time'
 
-      const h = Math.floor(this.curTimeSec / (60 * 60));
+      const d = Math.floor(this.curTimeSec / (60 * 60 * 24))
+      const h = Math.floor(this.curTimeSec / (60 * 60) % 24);
       const m = Math.floor((this.curTimeSec / 60) % 60);
       const s = Math.floor(this.curTimeSec % 60);
 
       const hh = h < 10 ? ("0" + h) : String(h);
       const mm = m < 10 ? ("0" + m) : String(m);
       const ss = s < 10 ? ("0" + s) : String(s);
-      const sign = this.timeMinus === "true" ? "-" : "";
-      const fTime = `${sign}${hh}:${mm}:${ss}`
+      const fTime = `${d}.${hh}:${mm}:${ss}`
 
       this.$emit('activated', this.curName, fTime);
       this.dialog = false;
@@ -144,9 +128,8 @@
 
     @Watch('currentHour')
     @Watch('currentMinute')
-    @Watch('currentSecond')
     timeInputChanged() {
-      let result = 3600 * this.currentHour + 60 * this.currentMinute + this.currentSecond;
+      let result = 3600 * this.currentHour + 60 * this.currentMinute;
       if (result < 0)
         result = 0;
 
@@ -159,16 +142,12 @@
     {
       const hour = Math.floor(newTime / 3600);
       const minute = Math.floor((newTime % 3600) / 60);
-      const second = Math.floor(newTime % 60);
 
       if (hour !== this.currentHour) {
         this.currentHour = hour;
       }
       if (minute !== this.currentMinute) {
         this.currentMinute = minute;
-      }
-      if (second !== this.currentSecond) {
-        this.currentSecond = second;
       }
     }
   }
