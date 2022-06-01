@@ -36,11 +36,11 @@
                     height="480px"
                     :options="actuatorOptions"
                     :series="actuatorSeries"/>
-        <apexchart type="rangeBar"
+        <!-- <apexchart type="rangeBar"
                     width="100%"
                     height="80px"
                     :options="statusOptions"
-                    :series="statusSeries"/>
+                    :series="statusSeries"/> -->
       </v-col>
     </v-row>
   </div>
@@ -224,7 +224,10 @@
       },
       xaxis: {
         labels: { datetimeUTC: false },
-        type: 'datetime'
+        type: 'datetime',
+        tooltip: {
+          enabled: false
+        }
       },
       yaxis: {
         seriesName: "Temperatura",
@@ -242,6 +245,24 @@
       stroke: {
         width: [3, 3, 2],
         dashArray:[0, 0, 3]
+      },
+      tooltip: {
+        x: {
+          format: "MM-dd HH:mm"
+        },
+        y: [{
+          formatter: function (y) {
+            if(typeof y !== "undefined") {
+              return  y.toFixed(1) + " °C" ;
+            }
+            return y;
+          }},{
+          formatter: function (y) {
+            if(typeof y !== "undefined") {
+              return  y.toFixed(1) + " %" ;
+            }
+            return y;
+        }}]
       }
     }
     actuatorOptions: ApexOptions = {
@@ -254,7 +275,10 @@
       },
       xaxis: {
         labels: { datetimeUTC: false },
-        type: 'datetime'
+        type: 'datetime',
+        tooltip: {
+          enabled: false
+        }
       },
       yaxis: {
         min: 0,
@@ -271,6 +295,11 @@
       stroke: {
         width: [3, 3, 3, 2, 2, 2],
         dashArray:[0, 0, 0, 3, 3, 3]
+      },
+      tooltip: {
+        x: {
+          format: "MM-dd HH:mm"
+        },
       }
     }
 
@@ -315,7 +344,7 @@
       },
       legend: {
         show: false
-      }
+      },
     }
   }
 </script>
