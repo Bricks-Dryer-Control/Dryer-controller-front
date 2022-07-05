@@ -49,8 +49,8 @@
           rounded
           mandatory
         >
-          <v-btn small color="purple lighten-3" v-model="toRoof">Dach</v-btn>
-          <v-btn small color="purple lighten-3" :value="!toRoof">Przerzut</v-btn>
+          <v-btn small color="blue lighten-3" v-model="toRoof">Dach</v-btn>
+          <v-btn small color="red lighten-3" :value="!toRoof">Przerzut</v-btn>
         </v-btn-toggle>
       </v-col>
     </v-row>

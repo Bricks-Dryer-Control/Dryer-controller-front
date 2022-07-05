@@ -18,10 +18,11 @@
                     type="number"
                     readonly /> 
     </v-col>
-    <v-col class="py-0" cols="2">
-      <v-switch :value="status.direction"
-                label="Czujnik kierunku"
-                readonly />
+    <v-col class="py-0 text-center" cols="2">
+      <h2>Kierunek:
+        <v-icon x-large
+                :color="status.direction ? 'green' : 'red'">mdi-fan</v-icon>
+      </h2>
     </v-col>
     <v-col class="py-0" cols="4">
       <v-btn large
